@@ -7,8 +7,8 @@ const spriteIdleLeft = "./img/idleLeft (1).png";
 const spriteJumpRight = "./img/jumpRight (1).png";
 const spriteJumpLeft = "./img/jumpLeft (1).png";
 const spritePlatformRoad = "./img/platformRoadB.png";
-const spriteBackground = "/img/background.png";
-const spriteBuildings = "/img/hills.png";
+const spriteBackground = "./img/background.png";
+const spriteBuildings = "./img/hills.png";
 
 canvas.width = 1024;
 canvas.height = 574;
@@ -17,7 +17,7 @@ class Player {
     constructor() {
         this.position = {
             x: 100,
-            y: 200,
+            y: 0,
         };
         this.velocity = {
             x: 0,
@@ -75,7 +75,7 @@ class Platform {
     }
 
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+        c.drawImage(this.image, this.position.x, this.position.y);
     }
 }
 
@@ -91,7 +91,7 @@ class GenericObject {
     }
 
     draw() {
-        c.drawImage(this.image, this.position.x, this.position.y, this.image.width, this.image.height);
+        c.drawImage(this.image, this.position.x, this.position.y);
     }
 }
 
@@ -111,7 +111,6 @@ gravity = () => {
     if (player.position.y + player.height + player.velocity.y <= canvas.height) {
         player.velocity.y += gravity;
     } else {
-        player.velocity.y = 0;
         player.canJump = true;
         if (player.currentSprite == player.sprites.jump.right) {
             player.currentSprite = player.sprites.idle.right;
@@ -196,6 +195,11 @@ playerCollision = () => {
             }
         }
     });
+
+    //lose
+    if(player.position.y > canvas.height) {
+        start();
+    }
 };
 
 createSprite = (imgSrc) => {
@@ -204,7 +208,7 @@ createSprite = (imgSrc) => {
     return image;
 };
 
-playerFrames = setInterval(() => {
+let playerFrames = setInterval(() => {
     player.animate();
 }, 60);
 
@@ -245,11 +249,48 @@ let genericObjects = [
 
 // -----------------------------------------------------------------------------------------------
 
-function start() {}
+function start() {
+    scrollOffset = 0;
+    platformRoad = createSprite(spritePlatformRoad);
+
+    player = new Player();
+    
+    platforms = [
+        new Platform(
+            -1, 
+            374, 
+            platformRoad
+            ), 
+        new Platform(
+            platformRoad.width - 2, 
+            374, 
+            platformRoad
+        ), 
+        new Platform(
+            platformRoad.width * 2 - 2, 
+            374, 
+            platformRoad
+        )
+    ];
+    
+    genericObjects = [
+        new GenericObject(
+            -1,
+            -200,
+            createSprite(spriteBackground)
+        ),
+        new GenericObject(
+            -1,
+            -210,
+            createSprite(spriteBuildings)
+        )
+    ]
+}
 
 function update() {
     requestAnimationFrame(update);
-    c.clearRect(0, 0, canvas.width, canvas.height);
+    c.fillStyle = "white";
+    c.fillRect(0, 0, canvas.width, canvas.height);
     gravity();
 
     genericObjects.forEach((genericObject)=> {
@@ -324,4 +365,5 @@ addEventListener("keyup", ({ key }) => {
             break;
     }
 });
+window.addEventListener('load', start());
 window.setInterval(update(), 1000 / 60);

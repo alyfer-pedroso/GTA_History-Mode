@@ -111,7 +111,7 @@ gravity = () => {
     if (player.position.y + player.height + player.velocity.y <= canvas.height) {
         player.velocity.y += gravity;
     } else {
-        player.canJump = true;
+        // player.canJump = true;
         if (player.currentSprite == player.sprites.jump.right) {
             player.currentSprite = player.sprites.idle.right;
         } else if (player.currentSprite == player.sprites.jump.left) {

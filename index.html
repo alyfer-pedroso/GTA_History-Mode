@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>GTA - Grande Trabalhador Autônomo</title>
 
-        <link rel="stylesheet" href="css/reset.css" />
-        <link rel="stylesheet" href="css/style.css" />
-    </head>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GTA New Mechanics</title>
+    <link rel="stylesheet" href="reset.css" />
 
-    <body>
-        <div class="jogo">
-            <span class="audioPlay">&#x1F508;</span>
-            <div class="soundTrack">
-                <audio controls loop class="paused">
-                    <source src="audio/soundTrack.mp3" type="audio/mp3" />
-                </audio>
-            </div>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
 
-            <div class="startMenu">
-                <img src="img/wallpaper.png" alt="" />
-                <span class="startMenu__btn">Começar</span>
-            </div>
+        canvas {
+            border-radius: 10px;
+        }
+    </style>
+</head>
 
-            <div class="scene">
-                <div class="player">
-                    <div class="playerAnim"></div>
-                </div>
-            </div>
-        </div>
-        <script src="js/script.js"></script>
-    </body>
+<body>
+    <canvas style="background-color: white"></canvas>
+
+    <script src="index.js"></script>
+</body>
+
 </html>

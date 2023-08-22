@@ -1,0 +1,85 @@
+@font-face {
+    font-family: gta;
+    src: url(../font/grand-theft-auto/pricedow.ttf);
+}
+* {
+    user-select: none;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #111;
+}
+
+div {
+    position: relative;
+    width: 1024px;
+    height: 576px;
+    border-radius: 10px;
+}
+
+.menu,
+.menu-bg {
+    position: absolute;
+    left: 0;
+    height: 0;
+    width: 100%;
+    height: 100%;
+}
+.menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: radial-gradient(ellipse at bottom right, #ffd9004a, #180065);
+    background-color: #180065;
+    animation: menuBG 15s infinite;
+    transition: background-color 15s ease-in-out;
+}
+.menu-bg {
+    background-image: url(../img/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.menu-btn {
+    position: absolute;
+    font-family: gta;
+    font-size: 3rem;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+    opacity: 0;
+    animation: menuBtn 1s ease-in-out 1s forwards;
+}
+.menu-btn:active {
+    background-color: black;
+    color: #efefef;
+}
+
+canvas {
+    border-radius: 10px;
+}
+
+@keyframes menuBG {
+    0%,
+    100% {
+        background-color: #180065;
+    }
+
+    50% {
+        background-color: #ffd900a5;
+    }
+}
+
+@keyframes menuBtn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

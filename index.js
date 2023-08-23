@@ -1,32 +1,93 @@
 // inGAME PROPERTIES
 const canvas = document.querySelector("canvas");
 const c = canvas.getContext("2d");
+
+canvas.width = 1024;
+canvas.height = 574;
+
+let isGame = false;
+
+// PLAYER
 const spriteRunRight = "./img/runRight (1).png";
 const spriteRunLeft = "./img/runLeft (1).png";
 const spriteIdleRight = "./img/idleRight (1).png";
 const spriteIdleLeft = "./img/idleLeft (1).png";
 const spriteJumpRight = "./img/jumpRight (1).png";
 const spriteJumpLeft = "./img/jumpLeft (1).png";
+let control = true;
+
+// NPC
+const maverickIdleRight = "./img/maverickIdleRight (1).png";
+
+// SCENE
 const spritePlatformRoad = "./img/platformRoadB.png";
 const spriteBackground = "./img/background.png";
 const spriteBuildings = "./img/hills.png";
-let isGame = false;
+const spriteCondos = "./img/condosLuxury (1).png";
 
-canvas.width = 1024;
-canvas.height = 574;
-
-// inMENU PROPERTIES
+// GAME HTML PROPERTIES
 const $menu = document.querySelector(".menu");
 const $menu_btn = document.querySelector(".menu-btn");
+const $epilogue = document.querySelector(".epilogue");
+const $sounds = document.querySelectorAll("audio");
+const $decision = document.querySelector(".decision");
+const $decision_opt = $decision.querySelectorAll("div");
+const vagas = $decision_opt[0].querySelectorAll(".btns");
+let vaga1 = false;
+let vaga2 = false;
 
-$menu_btn.addEventListener("click", () => {
-    callGame();
+$decision.style.display = "none";
+$decision_opt.forEach((opts) => {
+    opts.style.display = "none";
 });
 
-function callGame() {
-    isGame = true;
+// DIALOGUE
+const dialogueBox = document.querySelector(".dialogue");
+const dialogueIMG = document.querySelector(".dialogue img");
+const dialogueP = document.querySelector(".dialogue p");
+let isTalking = false;
+
+function typeWritter(text, el) {
+    const textArr = text.innerHTML.split("");
+    el.innerHTML = "";
+    textArr.forEach((char, i) => {
+        setTimeout(() => {
+            el.innerHTML += char;
+        }, 75 * i);
+    });
+}
+
+const player_speech = {
+    // With Daniel
+    speech_1: "Boa tarde, Daniel. Que decisão seria essa? Isso não foi comentado na entrevista...",
+    speech_2: "hmm...",
+};
+
+const npc1_speech = {
+    speech_1: "Ricardo, boa tarde. Como eu te disse no telefone, você foi escolhido para entrar na empresa, mas tem que fazer uma decisão.",
+    speech_2: "É o seguinte: temos duas vagas aqui na empresa, VAGA A: salário é maior, mas com menos benefícios. VAGA B: salário menor, mas com mais benefícios.",
+    speech_3: "Na VAGA A  • Salário de R$ 4.000  • Vale-refeição  • Vale-transporte  • 9 horas de trabalho",
+    speech_4: "Na VAGA B  • Salário de R$ 2.000  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
+    speech_5: "Eae, qual você prefere?",
+};
+//-----------------------------------------------------------------------------------------------
+
+$menu_btn.addEventListener("click", () => {
     $menu_btn.removeEventListener;
     $menu.style.display = "none";
+    $epilogue.style.display = "block";
+    $sounds[0].play();
+    typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
+    setTimeout(() => {
+        callGame();
+    }, 28000);
+});
+
+// callGame();
+function callGame() {
+    isGame = true;
+    $menu.style.display = "none";
+    $epilogue.style.display = "none";
 
     class Player {
         constructor() {
@@ -78,6 +139,39 @@ function callGame() {
         }
     }
 
+    class NPC {
+        constructor(x, y, width, height, sprR, sprL, sx, sy, frame) {
+            this.position = {
+                x,
+                y,
+            };
+            this.width = width;
+            this.height = height;
+            this.frames = 0;
+            this.frame = frame;
+            this.sx = sx;
+            this.sy = sy;
+            this.sprites = {
+                idle: {
+                    right: createSprite(sprR),
+                    left: createSprite(sprL),
+                },
+            };
+            this.currentSprite = this.sprites.idle.left;
+        }
+
+        draw() {
+            c.drawImage(this.currentSprite, this.sx * this.frames, 0, this.sx, this.sy, this.position.x, this.position.y, this.width, this.height);
+        }
+
+        animate() {
+            this.frames++;
+            if (this.frames > this.frame) {
+                this.frames = 0;
+            }
+        }
+    }
+
     class Platform {
         constructor(x, y, image) {
             this.position = {
@@ -116,6 +210,7 @@ function callGame() {
         right: { pressed: false },
         left: { pressed: false },
     };
+
     let scrollOffset = 0;
 
     gravity = () => {
@@ -162,6 +257,9 @@ function callGame() {
                 platforms.forEach((platform) => {
                     platform.position.x -= 5;
                 });
+                npcs.forEach((npc) => {
+                    npc.position.x -= 5;
+                });
                 genericObjects.forEach((genericObject) => {
                     genericObject.position.x -= 3;
                 });
@@ -174,6 +272,9 @@ function callGame() {
                 }
                 platforms.forEach((platform) => {
                     platform.position.x += 5;
+                });
+                npcs.forEach((npc) => {
+                    npc.position.x += 5;
                 });
                 genericObjects.forEach((genericObject) => {
                     genericObject.position.x += 3;
@@ -196,10 +297,20 @@ function callGame() {
         }
     };
 
+    speech = (text, el) => {
+        el.innerHTML = "";
+        dialogueBox.style.display = "flex";
+        const textArr = text.split("");
+        textArr.forEach((char, i) => {
+            setTimeout(() => {
+                el.innerHTML += char;
+            }, 55 * i);
+        });
+    };
+
     playerCollision = () => {
         //player with platform
         platforms.forEach((platform) => {
-            platform.draw();
             if (player.position.y + player.height <= platform.position.y + 35 && player.position.y + player.height + player.velocity.y >= platform.position.y + 35 && player.position.x + player.width >= platform.position.x && player.position.x <= platform.position.x + platform.width) {
                 player.velocity.y = 0;
                 player.canJump = true;
@@ -211,11 +322,93 @@ function callGame() {
             }
         });
 
-        //lose
+        //player with Daniel
+        if ((player.position.x + player.width >= npcs[0].position.x && player.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (player.position.x + player.width >= npcs[0].position.x && player.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
+            isTalking = true;
+            console.log(isTalking);
+        } else {
+            isTalking = false;
+        }
+
         if (player.position.y > canvas.height) {
             start();
         }
     };
+
+    interact = () => {
+        if (isTalking == true) {
+            //player with Daniel
+            if ((player.position.x + player.width >= npcs[0].position.x && player.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (player.position.x + player.width >= npcs[0].position.x && player.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
+                clearInterval(canTalk);
+                control = false;
+                player.currentSprite = player.sprites.idle.right;
+                keys.left.pressed = false;
+                keys.right.pressed = false;
+                dialogueIMG.src = "./img/DanielTalk.png";
+                speech(npc1_speech.speech_1, dialogueP);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/RicardoTalk.png";
+                    speech(player_speech.speech_1, dialogueP);
+                }, 7500);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/DanielTalk.png";
+                    speech(npc1_speech.speech_2, dialogueP);
+                }, 14000);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/RicardoTalk.png";
+                    speech(player_speech.speech_2, dialogueP);
+                }, 23000);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/DanielTalk.png";
+                    speech(npc1_speech.speech_3, dialogueP);
+                }, 25000);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/DanielTalk.png";
+                    speech(npc1_speech.speech_4, dialogueP);
+                }, 32000);
+                setTimeout(() => {
+                    dialogueIMG.src = "./img/DanielTalk.png";
+                    speech(npc1_speech.speech_5, dialogueP);
+                }, 41000);
+                setTimeout(() => {
+                    $decision.style.display = "flex";
+                    $decision_opt[0].style.display = "flex";
+
+                    vagas[0].addEventListener("click", () => {
+                        vaga1 = true;
+                        $decision.style.display = "none";
+                        $decision_opt.forEach((opts) => {
+                            opts.style.display = "none";
+                        });
+                        vagas.forEach((btn) => {
+                            btn.removeEventListener;
+                        });
+                        isTalking = false;
+                    });
+                    vagas[1].addEventListener("click", () => {
+                        vaga2 = true;
+                        $decision.style.display = "none";
+                        $decision_opt.forEach((opts) => {
+                            opts.style.display = "none";
+                        });
+                        vagas.forEach((btn) => {
+                            btn.removeEventListener;
+                        });
+                        isTalking = false;
+                    });
+                }, 44500);
+            } else {
+                control = true;
+                dialogueBox.style.display = "none";
+                dialogueP.innerHTML = "";
+                isTalking = false;
+            }
+        }
+    };
+
+    let canTalk = setInterval(() => {
+        interact();
+    }, 100);
 
     createSprite = (imgSrc) => {
         image = new Image();
@@ -225,13 +418,16 @@ function callGame() {
 
     let playerFrames = setInterval(() => {
         player.animate();
+        npcs.forEach((npc) => {
+            npc.animate();
+        });
     }, 60);
 
     platformRoad = createSprite(spritePlatformRoad);
 
     let player = new Player();
-
-    let platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad)];
+    let platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad)];
+    let npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
 
     let genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
 
@@ -242,8 +438,8 @@ function callGame() {
         platformRoad = createSprite(spritePlatformRoad);
 
         player = new Player();
-
-        platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad)];
+        platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad)];
+        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
 
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
     }
@@ -261,71 +457,85 @@ function callGame() {
             platform.draw();
         });
 
+        npcs.forEach((npc) => {
+            npc.draw();
+        });
+
         playerCollision();
         player.draw();
         playerMoviment();
+
+        if (isTalking == false) {
+            control = true;
+            dialogueBox.style.display = "none";
+            dialogueP.innerHTML = "";
+        }
     }
 
     // -----------------------------------------------------------------------------------------------
 
     addEventListener("keydown", ({ key }) => {
-        switch (key) {
-            case "w":
-                playerJump();
-                break;
+        if (control) {
+            switch (key) {
+                case "w":
+                    playerJump();
+                    break;
 
-            case "ArrowUp":
-                playerJump();
-                break;
+                case "ArrowUp":
+                    playerJump();
+                    break;
 
-            case " ":
-                playerJump();
-                break;
+                case " ":
+                    playerJump();
+                    break;
 
-            case "a":
-                keys.left.pressed = true;
-                player.currentSprite = player.sprites.run.left;
-                break;
+                case "a":
+                    keys.left.pressed = true;
+                    player.currentSprite = player.sprites.run.left;
+                    break;
 
-            case "d":
-                keys.right.pressed = true;
-                player.currentSprite = player.sprites.run.right;
-                break;
+                case "d":
+                    keys.right.pressed = true;
+                    player.currentSprite = player.sprites.run.right;
+                    break;
 
-            case "ArrowLeft":
-                keys.left.pressed = true;
-                player.currentSprite = player.sprites.run.left;
-                break;
+                case "ArrowLeft":
+                    keys.left.pressed = true;
+                    player.currentSprite = player.sprites.run.left;
+                    break;
 
-            case "ArrowRight":
-                keys.right.pressed = true;
-                player.currentSprite = player.sprites.run.right;
-                break;
+                case "ArrowRight":
+                    keys.right.pressed = true;
+                    player.currentSprite = player.sprites.run.right;
+                    break;
+            }
         }
     });
     addEventListener("keyup", ({ key }) => {
-        switch (key) {
-            case "a":
-                keys.left.pressed = false;
-                player.currentSprite = player.sprites.idle.left;
-                break;
+        if (control) {
+            switch (key) {
+                case "a":
+                    keys.left.pressed = false;
+                    player.currentSprite = player.sprites.idle.left;
+                    break;
 
-            case "d":
-                keys.right.pressed = false;
-                player.currentSprite = player.sprites.idle.right;
-                break;
+                case "d":
+                    keys.right.pressed = false;
+                    player.currentSprite = player.sprites.idle.right;
+                    break;
 
-            case "ArrowLeft":
-                keys.left.pressed = false;
-                player.currentSprite = player.sprites.idle.left;
-                break;
+                case "ArrowLeft":
+                    keys.left.pressed = false;
+                    player.currentSprite = player.sprites.idle.left;
+                    break;
 
-            case "ArrowRight":
-                keys.right.pressed = false;
-                player.currentSprite = player.sprites.idle.right;
-                break;
+                case "ArrowRight":
+                    keys.right.pressed = false;
+                    player.currentSprite = player.sprites.idle.right;
+                    break;
+            }
         }
     });
-    window.addEventListener("load", start());
+    // window.addEventListener("load", start());
     window.setInterval(update(), 1000 / 60);
 }

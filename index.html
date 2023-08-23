@@ -1,24 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GTA New Mechanics</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=REM:wght@300;400;600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="css/reset.css" />
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GTA New Mechanics</title>
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/style.css" />
-</head>
+    <body>
+        <div>
+            <div class="sounds">
+                <audio class="soundTrack" controls loop>
+                    <source src="music/soundTrack2.mp3" type="audio/mp3" />
+                </audio>
+            </div>
 
-<body>
-    <div>
-        <div class="menu">
-            <div class="menu-bg"></div>
-            <button class="menu-btn">Start</button>
+            <div class="menu">
+                <div class="menu-bg"></div>
+                <button class="menu-btn">Start</button>
+            </div>
+
+            <div class="epilogue"><p>Você vai assumir o papel de um jovem adulto chamado Ricardo, que está prestes a enfrentar os desafios do mundo financeiro após sair da faculdade. O objetivo é ajudar Ricardo a tomar decisões sábias e informadas sobre assuntos relacionados à educação financeira, desde a abertura da primeira conta bancária até o investimento em ações e planejamento para o futuro.</p></div>
+
+            <div class="dialogue">
+                <img src="" />
+                <p></p>
+            </div>
+
+            <div class="decision">
+                <div class="daniel">
+                    <button class="btns" id="vaga1">VAGA 1</button>
+                    <button class="btns" id="vaga2">VAGA 2</button>
+                </div>
+            </div>
+
+            <canvas></canvas>
         </div>
-        <canvas></canvas>
-    </div>
 
-    <script src="index.js"></script>
-</body>
-
+        <script src="index.js"></script>
+    </body>
 </html>

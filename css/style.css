@@ -2,6 +2,14 @@
     font-family: gta;
     src: url(../font/grand-theft-auto/pricedow.ttf);
 }
+@font-face {
+    font-family: pixel;
+    src: url(../font/pixel/PixeloidSans-mLxMm.ttf);
+}
+@font-face {
+    font-family: pixelBold;
+    src: url(../font/pixel/PixeloidSansBold-PKnYd.ttf);
+}
 * {
     user-select: none;
 }
@@ -20,6 +28,11 @@ div {
     width: 1024px;
     height: 576px;
     border-radius: 10px;
+}
+
+.sounds {
+    position: absolute;
+    visibility: hidden;
 }
 
 .menu,
@@ -57,6 +70,89 @@ div {
 .menu-btn:active {
     background-color: black;
     color: #efefef;
+}
+
+.epilogue {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    color: white;
+    font-family: gta;
+    font-size: 3rem;
+    text-align: center;
+    display: none;
+}
+.epilogue p {
+    margin: 4rem 0;
+    line-height: 1.15;
+}
+
+.dialogue {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 9rem;
+    display: none;
+    justify-content: space-between;
+}
+.dialogue img {
+    margin: 0 2rem;
+}
+.dialogue p {
+    background-color: white;
+    padding: 1rem;
+    border: 3px solid black;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    width: 100%;
+    font-family: pixel;
+    box-shadow: 10px 15px 20px black;
+}
+
+.decision {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000095;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.daniel {
+    width: 500px;
+    height: 300px;
+    /* background-color: white; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.btns {
+    background-color: forestgreen;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    padding: 2rem;
+    font-size: 2rem;
+    font-family: pixelBold;
+    color: white;
+}
+.btns:hover {
+    background-color: white;
+    color: forestgreen;
+    cursor: pointer;
+}
+.btns:active {
+    background-color: black;
+    color: white;
 }
 
 canvas {

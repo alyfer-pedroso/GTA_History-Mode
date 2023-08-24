@@ -448,12 +448,23 @@ function callGame() {
 
     // -----------------------------------------------------------------------------------------------
 
+    function loop() {
+        update();
+        render();
+    }
+
     function start() {
         firstScene();
     }
 
     function update() {
-        requestAnimationFrame(update);
+        if (!isInteract) {
+            player.interact();
+        }
+    }
+
+    function render() {
+        // requestAnimationFrame(render);
         c.fillStyle = "white";
         c.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -467,15 +478,10 @@ function callGame() {
         npcs.forEach((npc) => {
             npc.draw();
         });
-
+        player.draw();
         player.gravity();
         player.collision();
         player.moviment();
-        player.draw();
-
-        if (!isInteract) {
-            player.interact();
-        }
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -567,5 +573,5 @@ function callGame() {
         }
     });
     start();
-    setInterval(update(), 1000 / 60);
+    window.setInterval(loop, 1000 / 60);
 }

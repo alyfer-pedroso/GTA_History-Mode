@@ -31,6 +31,7 @@ const spritePlatformRoad = "./img/platformRoadB.png";
 const spriteBackground = "./img/background.png";
 const spriteBuildings = "./img/hills.png";
 const spriteCondos = "./img/condosLuxury (1).png";
+const bank = "./img/bank (1).png";
 let scrollOffset = 0;
 let platforms;
 let genericObjects;
@@ -76,6 +77,7 @@ const npc1_speech = {
     speech_3: "Na VAGA A  • Salário de R$ 4.000  • Vale-refeição  • Vale-transporte  • 9 horas de trabalho",
     speech_4: "Na VAGA B  • Salário de R$ 2.000  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
     speech_5: "Eae, qual você prefere?",
+    speech_6: "Sábia decisão, Ricardo.",
 };
 //-----------------------------------------------------------------------------------------------
 
@@ -131,6 +133,7 @@ function game() {
                     daniel: {
                         speech_1: "Boa tarde, Daniel. Que decisão seria essa? Isso não foi comentado na entrevista...",
                         speech_2: "hmm...",
+                        speech_3: "Bom, eu ja vou indo. Preciso passar no banco aqui da esquina para criar a minha conta. Até amanhã!",
                     },
                 };
             }
@@ -157,7 +160,7 @@ function game() {
                 } else {
                     this.velocity.x = 0;
 
-                    if ((keys.right.pressed && scrollOffset < 2300 && isFirtScene) || (keys.right.pressed && !isFirtScene)) {
+                    if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || (keys.right.pressed && !isFirtScene)) {
                         if (!this.canJump) {
                             this.currentSprite = this.sprites.jump.right;
                         } else {
@@ -314,10 +317,20 @@ function game() {
                                     vagas.forEach((btn) => {
                                         btn.removeEventListener;
                                     });
-                                    daniel = false;
-                                    canTalk = setInterval(() => {
-                                        player.interact();
-                                    }, 100);
+                                    setTimeout(() => {
+                                        dialogueIMG.src = "./img/DanielTalk.png";
+                                        speech(npc1_speech.speech_6, dialogueP);
+                                    }, 1000);
+                                    setTimeout(() => {
+                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                        speech(this.speech.daniel.speech_3, dialogueP);
+                                    }, 4000);
+                                    setTimeout(() => {
+                                        daniel = false;
+                                        canTalk = setInterval(() => {
+                                            player.interact();
+                                        }, 100);
+                                    }, 11000);
                                 });
                                 vagas[1].addEventListener("click", () => {
                                     vaga2 = true;
@@ -328,10 +341,20 @@ function game() {
                                     vagas.forEach((btn) => {
                                         btn.removeEventListener;
                                     });
-                                    daniel = false;
-                                    canTalk = setInterval(() => {
-                                        player.interact();
-                                    }, 100);
+                                    setTimeout(() => {
+                                        dialogueIMG.src = "./img/DanielTalk.png";
+                                        speech(npc1_speech.speech_6, dialogueP);
+                                    }, 1000);
+                                    setTimeout(() => {
+                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                        speech(this.speech.daniel.speech_3, dialogueP);
+                                    }, 4000);
+                                    setTimeout(() => {
+                                        daniel = false;
+                                        canTalk = setInterval(() => {
+                                            player.interact();
+                                        }, 100);
+                                    }, 11000);
                                 });
                             }, 44500);
                         } else {
@@ -461,6 +484,7 @@ function game() {
                 dialogueBox.style.display = "none";
                 dialogueP.innerHTML = "";
             }
+            console.log(scrollOffset);
         }
 
         // -----------------------------------------------------------------------------------------------
@@ -472,7 +496,9 @@ function game() {
             platformRoad = createSprite(spritePlatformRoad);
 
             player = new Player();
-            platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad)];
+
+            platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 2 + 3500, -458, createSprite(bank))];
+
             npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
 
             genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];

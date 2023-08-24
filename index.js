@@ -34,6 +34,7 @@ const spriteCondos = "./img/condosLuxury (1).png";
 let scrollOffset = 0;
 let platforms;
 let genericObjects;
+let isFirtScene = false;
 
 // GAME HTML PROPERTIES
 const $menu = document.querySelector(".menu");
@@ -77,468 +78,471 @@ const npc1_speech = {
 };
 //-----------------------------------------------------------------------------------------------
 
-// $menu_btn.addEventListener("click", () => {
-//     $menu_btn.removeEventListener;
-//     $menu.style.display = "none";
-//     $epilogue.style.display = "block";
-//     $sounds[0].play();
-//     typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
-//     setTimeout(() => {
-//         callGame();
-//     }, 28000);
-// });
+function game() {
+    $menu_btn.addEventListener("click", () => {
+        $menu_btn.removeEventListener;
+        $menu.style.display = "none";
+        $epilogue.style.display = "block";
+        $sounds[0].play();
+        typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
+        setTimeout(() => {
+            callGame();
+        }, 28000);
+    });
 
-callGame();
-function callGame() {
-    isGame = true;
-    $menu.style.display = "none";
-    $epilogue.style.display = "none";
+    // callGame();
+    function callGame() {
+        isGame = true;
+        $menu.style.display = "none";
+        $epilogue.style.display = "none";
 
-    class Player {
-        constructor() {
-            this.position = {
-                x: 100,
-                y: 0,
-            };
-            this.velocity = {
-                x: 0,
-                y: 0,
-            };
-            this.width = 118;
-            this.height = 120;
-            this.frames = 0;
-            this.sprites = {
-                idle: {
-                    right: createSprite(spriteIdleRight),
-                    left: createSprite(spriteIdleLeft),
-                },
-                run: {
-                    right: createSprite(spriteRunRight),
-                    left: createSprite(spriteRunLeft),
-                },
-                jump: {
-                    right: createSprite(spriteJumpRight),
-                    left: createSprite(spriteJumpLeft),
-                },
-            };
-            this.currentSprite = this.sprites.idle.right;
-            this.canJump = true;
+        class Player {
+            constructor() {
+                this.position = {
+                    x: 100,
+                    y: 0,
+                };
+                this.velocity = {
+                    x: 0,
+                    y: 0,
+                };
+                this.width = 118;
+                this.height = 120;
+                this.frames = 0;
+                this.sprites = {
+                    idle: {
+                        right: createSprite(spriteIdleRight),
+                        left: createSprite(spriteIdleLeft),
+                    },
+                    run: {
+                        right: createSprite(spriteRunRight),
+                        left: createSprite(spriteRunLeft),
+                    },
+                    jump: {
+                        right: createSprite(spriteJumpRight),
+                        left: createSprite(spriteJumpLeft),
+                    },
+                };
+                this.currentSprite = this.sprites.idle.right;
+                this.canJump = true;
 
-            this.speech = {
-                daniel: {
-                    speech_1: "Boa tarde, Daniel. Que decisão seria essa? Isso não foi comentado na entrevista...",
-                    speech_2: "hmm...",
-                },
-            };
-        }
+                this.speech = {
+                    daniel: {
+                        speech_1: "Boa tarde, Daniel. Que decisão seria essa? Isso não foi comentado na entrevista...",
+                        speech_2: "hmm...",
+                    },
+                };
+            }
 
-        draw() {
-            c.drawImage(this.currentSprite, 236 * this.frames, 0, 236, 240, this.position.x, this.position.y, this.width, this.height);
-        }
+            draw() {
+                c.drawImage(this.currentSprite, 236 * this.frames, 0, 236, 240, this.position.x, this.position.y, this.width, this.height);
+            }
 
-        moviment() {
-            if (keys.right.pressed && player.position.x < 400) {
-                this.velocity.x = 5;
-                if (!this.canJump) {
-                    this.currentSprite = this.sprites.jump.right;
-                } else {
-                    this.currentSprite = this.sprites.run.right;
-                }
-            } else if ((keys.left.pressed && this.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && this.position.x > 0)) {
-                this.velocity.x = -5;
-                if (!this.canJump) {
-                    this.currentSprite = this.sprites.jump.left;
-                } else {
-                    this.currentSprite = this.sprites.run.left;
-                }
-            } else {
-                this.velocity.x = 0;
-
-                if (keys.right.pressed) {
+            moviment() {
+                if (keys.right.pressed && player.position.x < 400) {
+                    this.velocity.x = 5;
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.right;
                     } else {
                         this.currentSprite = this.sprites.run.right;
                     }
-                    platforms.forEach((platform) => {
-                        platform.position.x -= 5;
-                    });
-                    npcs.forEach((npc) => {
-                        npc.position.x -= 5;
-                    });
-                    genericObjects.forEach((genericObject) => {
-                        genericObject.position.x -= 3;
-                    });
-                    scrollOffset += 5;
-                } else if (keys.left.pressed && scrollOffset > 0) {
+                } else if ((keys.left.pressed && this.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && this.position.x > 0)) {
+                    this.velocity.x = -5;
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.left;
                     } else {
                         this.currentSprite = this.sprites.run.left;
                     }
-                    platforms.forEach((platform) => {
-                        platform.position.x += 5;
-                    });
-                    npcs.forEach((npc) => {
-                        npc.position.x += 5;
-                    });
-                    genericObjects.forEach((genericObject) => {
-                        genericObject.position.x += 3;
-                    });
-                    scrollOffset -= 5;
+                } else {
+                    this.velocity.x = 0;
+
+                    if ((keys.right.pressed && scrollOffset < 2300 && isFirtScene) || (keys.right.pressed && !isFirtScene)) {
+                        if (!this.canJump) {
+                            this.currentSprite = this.sprites.jump.right;
+                        } else {
+                            this.currentSprite = this.sprites.run.right;
+                        }
+                        platforms.forEach((platform) => {
+                            platform.position.x -= 5;
+                        });
+                        npcs.forEach((npc) => {
+                            npc.position.x -= 5;
+                        });
+                        genericObjects.forEach((genericObject) => {
+                            genericObject.position.x -= 3;
+                        });
+                        scrollOffset += 5;
+                    } else if (keys.left.pressed && scrollOffset > 0) {
+                        if (!this.canJump) {
+                            this.currentSprite = this.sprites.jump.left;
+                        } else {
+                            this.currentSprite = this.sprites.run.left;
+                        }
+                        platforms.forEach((platform) => {
+                            platform.position.x += 5;
+                        });
+                        npcs.forEach((npc) => {
+                            npc.position.x += 5;
+                        });
+                        genericObjects.forEach((genericObject) => {
+                            genericObject.position.x += 3;
+                        });
+                        scrollOffset -= 5;
+                    }
                 }
             }
-        }
 
-        gravity() {
-            const gravity = 1.5;
-            this.position.x += this.velocity.x;
-            this.position.y += this.velocity.y;
+            gravity() {
+                const gravity = 1.5;
+                this.position.x += this.velocity.x;
+                this.position.y += this.velocity.y;
 
-            if (this.position.y + this.height + this.velocity.y <= canvas.height) {
-                this.velocity.y += gravity;
-            } else {
-                // this.canJump = true;
-                if (this.currentSprite == this.sprites.jump.right) {
-                    this.currentSprite = this.sprites.idle.right;
-                } else if (this.currentSprite == this.sprites.jump.left) {
-                    this.currentSprite = this.sprites.idle.left;
-                }
-            }
-        }
-
-        jump() {
-            if (this.canJump) {
-                this.velocity.y -= 25;
-                this.canJump = false;
-            }
-
-            if (this.currentSprite == this.sprites.idle.right) {
-                this.currentSprite = this.sprites.jump.right;
-            } else if (this.currentSprite == this.sprites.idle.left) {
-                this.currentSprite = this.sprites.jump.left;
-            }
-        }
-
-        collision() {
-            //player with platform
-            platforms.forEach((platform) => {
-                if (this.position.y + this.height <= platform.position.y + 35 && this.position.y + this.height + this.velocity.y >= platform.position.y + 35 && this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width) {
-                    this.velocity.y = 0;
-                    this.canJump = true;
+                if (this.position.y + this.height + this.velocity.y <= canvas.height) {
+                    this.velocity.y += gravity;
+                } else {
+                    // this.canJump = true;
                     if (this.currentSprite == this.sprites.jump.right) {
                         this.currentSprite = this.sprites.idle.right;
                     } else if (this.currentSprite == this.sprites.jump.left) {
                         this.currentSprite = this.sprites.idle.left;
                     }
                 }
-            });
-
-            //this with Daniel
-            if ((this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
-                isTalking = true;
-                console.log(isTalking);
-            } else {
-                isTalking = false;
             }
 
-            if (this.position.y > canvas.height) {
-                init();
+            jump() {
+                if (this.canJump) {
+                    this.velocity.y -= 25;
+                    this.canJump = false;
+                }
+
+                if (this.currentSprite == this.sprites.idle.right) {
+                    this.currentSprite = this.sprites.jump.right;
+                } else if (this.currentSprite == this.sprites.idle.left) {
+                    this.currentSprite = this.sprites.jump.left;
+                }
+            }
+
+            collision() {
+                //player with platform
+                platforms.forEach((platform) => {
+                    if (this.position.y + this.height <= platform.position.y + 35 && this.position.y + this.height + this.velocity.y >= platform.position.y + 35 && this.position.x + this.width >= platform.position.x && this.position.x <= platform.position.x + platform.width) {
+                        this.velocity.y = 0;
+                        this.canJump = true;
+                        if (this.currentSprite == this.sprites.jump.right) {
+                            this.currentSprite = this.sprites.idle.right;
+                        } else if (this.currentSprite == this.sprites.jump.left) {
+                            this.currentSprite = this.sprites.idle.left;
+                        }
+                    }
+                });
+
+                //this with Daniel
+                if ((this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
+                    isTalking = true;
+                    console.log(isTalking);
+                } else {
+                    isTalking = false;
+                }
+
+                if (this.position.y > canvas.height) {
+                    firstScene();
+                }
+            }
+
+            animate() {
+                this.frames++;
+                if (this.frames > 7) {
+                    this.frames = 0;
+                }
+
+                if (!this.canJump) {
+                    this.frames++;
+                    if (this.frames > 4) {
+                        this.frames = 0;
+                    }
+                }
+            }
+
+            interact() {
+                if (isTalking) {
+                    //player with Daniel
+                    if ((this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
+                        clearInterval(canTalk);
+                        control = false;
+                        this.currentSprite = this.sprites.idle.right;
+                        keys.left.pressed = false;
+                        keys.right.pressed = false;
+                        dialogueIMG.src = "./img/DanielTalk.png";
+                        speech(npc1_speech.speech_1, dialogueP);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.daniel.speech_1, dialogueP);
+                        }, 7500);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_2, dialogueP);
+                        }, 14000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.daniel.speech_2, dialogueP);
+                        }, 23000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_3, dialogueP);
+                        }, 25000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_4, dialogueP);
+                        }, 32000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_5, dialogueP);
+                        }, 41000);
+                        setTimeout(() => {
+                            $decision.style.display = "flex";
+                            $decision_opt[0].style.display = "flex";
+
+                            vagas[0].addEventListener("click", () => {
+                                vaga1 = true;
+                                $decision.style.display = "none";
+                                $decision_opt.forEach((opts) => {
+                                    opts.style.display = "none";
+                                });
+                                vagas.forEach((btn) => {
+                                    btn.removeEventListener;
+                                });
+                                isTalking = false;
+                            });
+                            vagas[1].addEventListener("click", () => {
+                                vaga2 = true;
+                                $decision.style.display = "none";
+                                $decision_opt.forEach((opts) => {
+                                    opts.style.display = "none";
+                                });
+                                vagas.forEach((btn) => {
+                                    btn.removeEventListener;
+                                });
+                                isTalking = false;
+                            });
+                        }, 44500);
+                    } else {
+                        control = true;
+                        dialogueBox.style.display = "none";
+                        dialogueP.innerHTML = "";
+                        isTalking = false;
+                    }
+                }
             }
         }
 
-        animate() {
-            this.frames++;
-            if (this.frames > 7) {
+        class NPC {
+            constructor(x, y, width, height, sprR, sprL, sx, sy, frame) {
+                this.position = {
+                    x,
+                    y,
+                };
+                this.width = width;
+                this.height = height;
                 this.frames = 0;
+                this.frame = frame;
+                this.sx = sx;
+                this.sy = sy;
+                this.sprites = {
+                    idle: {
+                        right: createSprite(sprR),
+                        left: createSprite(sprL),
+                    },
+                };
+                this.currentSprite = this.sprites.idle.left;
             }
 
-            if (!this.canJump) {
+            draw() {
+                c.drawImage(this.currentSprite, this.sx * this.frames, 0, this.sx, this.sy, this.position.x, this.position.y, this.width, this.height);
+            }
+
+            animate() {
                 this.frames++;
-                if (this.frames > 4) {
+                if (this.frames > this.frame) {
                     this.frames = 0;
                 }
             }
         }
 
-        interact() {
-            if (isTalking) {
-                //player with Daniel
-                if ((this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
-                    clearInterval(canTalk);
-                    control = false;
-                    this.currentSprite = this.sprites.idle.right;
-                    keys.left.pressed = false;
-                    keys.right.pressed = false;
-                    dialogueIMG.src = "./img/DanielTalk.png";
-                    speech(npc1_speech.speech_1, dialogueP);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/RicardoTalk.png";
-                        speech(this.speech.daniel.speech_1, dialogueP);
-                    }, 7500);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_2, dialogueP);
-                    }, 14000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/RicardoTalk.png";
-                        speech(this.speech.daniel.speech_2, dialogueP);
-                    }, 23000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_3, dialogueP);
-                    }, 25000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_4, dialogueP);
-                    }, 32000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_5, dialogueP);
-                    }, 41000);
-                    setTimeout(() => {
-                        $decision.style.display = "flex";
-                        $decision_opt[0].style.display = "flex";
+        class Platform {
+            constructor(x, y, image) {
+                this.position = {
+                    x,
+                    y,
+                };
+                this.image = image;
+                this.width = image.width;
+                this.height = image.height;
+            }
 
-                        vagas[0].addEventListener("click", () => {
-                            vaga1 = true;
-                            $decision.style.display = "none";
-                            $decision_opt.forEach((opts) => {
-                                opts.style.display = "none";
-                            });
-                            vagas.forEach((btn) => {
-                                btn.removeEventListener;
-                            });
-                            isTalking = false;
-                        });
-                        vagas[1].addEventListener("click", () => {
-                            vaga2 = true;
-                            $decision.style.display = "none";
-                            $decision_opt.forEach((opts) => {
-                                opts.style.display = "none";
-                            });
-                            vagas.forEach((btn) => {
-                                btn.removeEventListener;
-                            });
-                            isTalking = false;
-                        });
-                    }, 44500);
-                } else {
-                    control = true;
-                    dialogueBox.style.display = "none";
-                    dialogueP.innerHTML = "";
-                    isTalking = false;
+            draw() {
+                c.drawImage(this.image, this.position.x, this.position.y);
+            }
+        }
+
+        class GenericObject {
+            constructor(x, y, image) {
+                this.position = {
+                    x,
+                    y,
+                };
+                this.image = image;
+                this.width = image.width;
+                this.height = image.height;
+            }
+
+            draw() {
+                c.drawImage(this.image, this.position.x, this.position.y);
+            }
+        }
+
+        // -----------------------------------------------------------------------------------------------
+
+        speech = (text, el) => {
+            el.innerHTML = "";
+            dialogueBox.style.display = "flex";
+            const textArr = text.split("");
+            textArr.forEach((char, i) => {
+                setTimeout(() => {
+                    el.innerHTML += char;
+                }, 55 * i);
+            });
+        };
+
+        createSprite = (imgSrc) => {
+            image = new Image();
+            image.src = imgSrc;
+            return image;
+        };
+
+        // -----------------------------------------------------------------------------------------------
+
+        function start() {
+            firstScene();
+        }
+
+        function update() {
+            requestAnimationFrame(update);
+            c.fillStyle = "white";
+            c.fillRect(0, 0, canvas.width, canvas.height);
+
+            genericObjects.forEach((genericObject) => {
+                genericObject.draw();
+            });
+            platforms.forEach((platform) => {
+                platform.draw();
+            });
+
+            npcs.forEach((npc) => {
+                npc.draw();
+            });
+
+            player.gravity();
+            player.collision();
+            player.moviment();
+            player.draw();
+
+            if (isTalking == false) {
+                control = true;
+                dialogueBox.style.display = "none";
+                dialogueP.innerHTML = "";
+            }
+            console.log(scrollOffset);
+        }
+
+        // -----------------------------------------------------------------------------------------------
+        function firstScene() {
+            isFirtScene = true;
+            scrollOffset = 0;
+            platformRoad = createSprite(spritePlatformRoad);
+
+            player = new Player();
+            platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad)];
+            npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
+
+            genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
+
+            playerFrames = setInterval(() => {
+                player.animate();
+                npcs.forEach((npc) => {
+                    npc.animate();
+                });
+            }, 60);
+
+            // canTalk = setInterval(() => {
+            //     player.interact();
+            // }, 100);
+        }
+        // -----------------------------------------------------------------------------------------------
+
+        addEventListener("keydown", ({ key }) => {
+            if (control) {
+                switch (key) {
+                    case "w":
+                        player.jump();
+                        break;
+
+                    case "ArrowUp":
+                        player.jump();
+                        break;
+
+                    case " ":
+                        player.jump();
+                        break;
+
+                    case "a":
+                        keys.left.pressed = true;
+                        player.currentSprite = player.sprites.run.left;
+                        break;
+
+                    case "d":
+                        keys.right.pressed = true;
+                        player.currentSprite = player.sprites.run.right;
+                        break;
+
+                    case "ArrowLeft":
+                        keys.left.pressed = true;
+                        player.currentSprite = player.sprites.run.left;
+                        break;
+
+                    case "ArrowRight":
+                        keys.right.pressed = true;
+                        player.currentSprite = player.sprites.run.right;
+                        break;
                 }
             }
-        }
-    }
+        });
+        addEventListener("keyup", ({ key }) => {
+            if (control) {
+                switch (key) {
+                    case "a":
+                        keys.left.pressed = false;
+                        player.currentSprite = player.sprites.idle.left;
+                        break;
 
-    class NPC {
-        constructor(x, y, width, height, sprR, sprL, sx, sy, frame) {
-            this.position = {
-                x,
-                y,
-            };
-            this.width = width;
-            this.height = height;
-            this.frames = 0;
-            this.frame = frame;
-            this.sx = sx;
-            this.sy = sy;
-            this.sprites = {
-                idle: {
-                    right: createSprite(sprR),
-                    left: createSprite(sprL),
-                },
-            };
-            this.currentSprite = this.sprites.idle.left;
-        }
+                    case "d":
+                        keys.right.pressed = false;
+                        player.currentSprite = player.sprites.idle.right;
+                        break;
 
-        draw() {
-            c.drawImage(this.currentSprite, this.sx * this.frames, 0, this.sx, this.sy, this.position.x, this.position.y, this.width, this.height);
-        }
+                    case "ArrowLeft":
+                        keys.left.pressed = false;
+                        player.currentSprite = player.sprites.idle.left;
+                        break;
 
-        animate() {
-            this.frames++;
-            if (this.frames > this.frame) {
-                this.frames = 0;
+                    case "ArrowRight":
+                        keys.right.pressed = false;
+                        player.currentSprite = player.sprites.idle.right;
+                        break;
+                }
             }
-        }
-    }
-
-    class Platform {
-        constructor(x, y, image) {
-            this.position = {
-                x,
-                y,
-            };
-            this.image = image;
-            this.width = image.width;
-            this.height = image.height;
-        }
-
-        draw() {
-            c.drawImage(this.image, this.position.x, this.position.y);
-        }
-    }
-
-    class GenericObject {
-        constructor(x, y, image) {
-            this.position = {
-                x,
-                y,
-            };
-            this.image = image;
-            this.width = image.width;
-            this.height = image.height;
-        }
-
-        draw() {
-            c.drawImage(this.image, this.position.x, this.position.y);
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------
-
-    speech = (text, el) => {
-        el.innerHTML = "";
-        dialogueBox.style.display = "flex";
-        const textArr = text.split("");
-        textArr.forEach((char, i) => {
-            setTimeout(() => {
-                el.innerHTML += char;
-            }, 55 * i);
         });
-    };
-
-    createSprite = (imgSrc) => {
-        image = new Image();
-        image.src = imgSrc;
-        return image;
-    };
-
-    // -----------------------------------------------------------------------------------------------
-
-    function start() {
-        init();
+        window.addEventListener("load", start());
+        window.setInterval(update(), 1000 / 60);
     }
-
-    // -----------------------------------------------------------------------------------------------
-
-    function update() {
-        requestAnimationFrame(update);
-        c.fillStyle = "white";
-        c.fillRect(0, 0, canvas.width, canvas.height);
-
-        genericObjects.forEach((genericObject) => {
-            genericObject.draw();
-        });
-        platforms.forEach((platform) => {
-            platform.draw();
-        });
-
-        npcs.forEach((npc) => {
-            npc.draw();
-        });
-
-        player.gravity();
-        player.collision();
-        player.moviment();
-        player.draw();
-
-        if (isTalking == false) {
-            control = true;
-            dialogueBox.style.display = "none";
-            dialogueP.innerHTML = "";
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    function init() {
-        scrollOffset = 0;
-        platformRoad = createSprite(spritePlatformRoad);
-
-        player = new Player();
-        platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad)];
-        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
-
-        genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
-
-        playerFrames = setInterval(() => {
-            player.animate();
-            npcs.forEach((npc) => {
-                npc.animate();
-            });
-        }, 60);
-
-        canTalk = setInterval(() => {
-            player.interact();
-        }, 100);
-    }
-    // -----------------------------------------------------------------------------------------------
-
-    addEventListener("keydown", ({ key }) => {
-        if (control) {
-            switch (key) {
-                case "w":
-                    player.jump();
-                    break;
-
-                case "ArrowUp":
-                    player.jump();
-                    break;
-
-                case " ":
-                    player.jump();
-                    break;
-
-                case "a":
-                    keys.left.pressed = true;
-                    player.currentSprite = player.sprites.run.left;
-                    break;
-
-                case "d":
-                    keys.right.pressed = true;
-                    player.currentSprite = player.sprites.run.right;
-                    break;
-
-                case "ArrowLeft":
-                    keys.left.pressed = true;
-                    player.currentSprite = player.sprites.run.left;
-                    break;
-
-                case "ArrowRight":
-                    keys.right.pressed = true;
-                    player.currentSprite = player.sprites.run.right;
-                    break;
-            }
-        }
-    });
-    addEventListener("keyup", ({ key }) => {
-        if (control) {
-            switch (key) {
-                case "a":
-                    keys.left.pressed = false;
-                    player.currentSprite = player.sprites.idle.left;
-                    break;
-
-                case "d":
-                    keys.right.pressed = false;
-                    player.currentSprite = player.sprites.idle.right;
-                    break;
-
-                case "ArrowLeft":
-                    keys.left.pressed = false;
-                    player.currentSprite = player.sprites.idle.left;
-                    break;
-
-                case "ArrowRight":
-                    keys.right.pressed = false;
-                    player.currentSprite = player.sprites.idle.right;
-                    break;
-            }
-        }
-    });
-    window.addEventListener("load", start());
-    window.setInterval(update(), 1000 / 60);
 }
+game();

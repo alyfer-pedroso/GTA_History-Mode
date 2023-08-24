@@ -81,18 +81,18 @@ const npc1_speech = {
 
 //-----------------------------------------------------------------------------------------------
 
-// $menu_btn.addEventListener("click", () => {
-//     $menu_btn.removeEventListener;
-//     $menu.style.display = "none";
-//     $epilogue.style.display = "block";
-//     $sounds[0].play();
-//     typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
-//     setTimeout(() => {
-//         callGame();
-//     }, 28000);
-// });
+$menu_btn.addEventListener("click", () => {
+    $menu_btn.removeEventListener;
+    $menu.style.display = "none";
+    $epilogue.style.display = "block";
+    $sounds[0].play();
+    typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
+    setTimeout(() => {
+        callGame();
+    }, 28000);
+});
 
-callGame();
+// callGame();
 function callGame() {
     isGame = true;
     $menu.style.display = "none";

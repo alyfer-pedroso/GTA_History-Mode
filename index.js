@@ -82,18 +82,18 @@ const npc1_speech = {
 //-----------------------------------------------------------------------------------------------
 
 function game() {
-    // $menu_btn.addEventListener("click", () => {
-    //     $menu_btn.removeEventListener;
-    //     $menu.style.display = "none";
-    //     $epilogue.style.display = "block";
-    //     $sounds[0].play();
-    //     typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
-    //     setTimeout(() => {
-    //         callGame();
-    //     }, 28000);
-    // });
+    $menu_btn.addEventListener("click", () => {
+        $menu_btn.removeEventListener;
+        $menu.style.display = "none";
+        $epilogue.style.display = "block";
+        $sounds[0].play();
+        typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
+        setTimeout(() => {
+            callGame();
+        }, 28000);
+    });
 
-    callGame();
+    // callGame();
     function callGame() {
         isGame = true;
         $menu.style.display = "none";
@@ -134,6 +134,8 @@ function game() {
                         speech_1: "Boa tarde, Daniel. Que decisão seria essa? Isso não foi comentado na entrevista...",
                         speech_2: "hmm...",
                         speech_3: "Bom, eu ja vou indo. Preciso passar no banco aqui da esquina para criar a minha conta. Até amanhã!",
+                        speech_vaga1: "Um salário maior é a melhor opção para meu início de carreira. Eu escolho a oferta com o salário mais alto e menos benefícios.",
+                        speech_vaga2: "Eu opto pela oferta que oferece um salário menor, mas com benefícios mais abrangentes. Estou ansioso para equilibrar minha vida pessoal e profissional de maneira mais saudável.",
                     },
                 };
             }
@@ -318,19 +320,23 @@ function game() {
                                         btn.removeEventListener;
                                     });
                                     setTimeout(() => {
+                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                        speech(this.speech.daniel.speech_vaga1, dialogueP);
+                                    }, 1000);
+                                    setTimeout(() => {
                                         dialogueIMG.src = "./img/DanielTalk.png";
                                         speech(npc1_speech.speech_6, dialogueP);
-                                    }, 1000);
+                                    }, 11000);
                                     setTimeout(() => {
                                         dialogueIMG.src = "./img/RicardoTalk.png";
                                         speech(this.speech.daniel.speech_3, dialogueP);
-                                    }, 4000);
+                                    }, 14500);
                                     setTimeout(() => {
                                         daniel = false;
                                         canTalk = setInterval(() => {
                                             player.interact();
                                         }, 100);
-                                    }, 11000);
+                                    }, 21000);
                                 });
                                 vagas[1].addEventListener("click", () => {
                                     vaga2 = true;
@@ -342,19 +348,23 @@ function game() {
                                         btn.removeEventListener;
                                     });
                                     setTimeout(() => {
+                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                        speech(this.speech.daniel.speech_vaga1, dialogueP);
+                                    }, 1000);
+                                    setTimeout(() => {
                                         dialogueIMG.src = "./img/DanielTalk.png";
                                         speech(npc1_speech.speech_6, dialogueP);
-                                    }, 1000);
+                                    }, 12000);
                                     setTimeout(() => {
                                         dialogueIMG.src = "./img/RicardoTalk.png";
                                         speech(this.speech.daniel.speech_3, dialogueP);
-                                    }, 4000);
+                                    }, 15000);
                                     setTimeout(() => {
                                         daniel = false;
                                         canTalk = setInterval(() => {
                                             player.interact();
                                         }, 100);
-                                    }, 11000);
+                                    }, 21500);
                                 });
                             }, 44500);
                         } else {

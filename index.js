@@ -58,6 +58,7 @@ const dialogueIMG = document.querySelector(".dialogue img");
 const dialogueP = document.querySelector(".dialogue p");
 let isTalking = false;
 let npcs;
+let daniel;
 
 function typeWritter(text, el) {
     const textArr = text.innerHTML.split("");
@@ -266,70 +267,79 @@ function game() {
             interact() {
                 if (isTalking) {
                     //player with Daniel
-                    if ((this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga1 == false) || (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width && vaga2 == false)) {
-                        clearInterval(canTalk);
-                        control = false;
-                        this.currentSprite = this.sprites.idle.right;
-                        keys.left.pressed = false;
-                        keys.right.pressed = false;
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_1, dialogueP);
-                        setTimeout(() => {
-                            dialogueIMG.src = "./img/RicardoTalk.png";
-                            speech(this.speech.daniel.speech_1, dialogueP);
-                        }, 7500);
-                        setTimeout(() => {
+                    if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
+                        if (daniel == true) {
+                            clearInterval(canTalk);
+                            control = false;
+                            daniel = false;
+                            this.currentSprite = this.sprites.idle.right;
+                            keys.left.pressed = false;
+                            keys.right.pressed = false;
                             dialogueIMG.src = "./img/DanielTalk.png";
-                            speech(npc1_speech.speech_2, dialogueP);
-                        }, 14000);
-                        setTimeout(() => {
-                            dialogueIMG.src = "./img/RicardoTalk.png";
-                            speech(this.speech.daniel.speech_2, dialogueP);
-                        }, 23000);
-                        setTimeout(() => {
-                            dialogueIMG.src = "./img/DanielTalk.png";
-                            speech(npc1_speech.speech_3, dialogueP);
-                        }, 25000);
-                        setTimeout(() => {
-                            dialogueIMG.src = "./img/DanielTalk.png";
-                            speech(npc1_speech.speech_4, dialogueP);
-                        }, 32000);
-                        setTimeout(() => {
-                            dialogueIMG.src = "./img/DanielTalk.png";
-                            speech(npc1_speech.speech_5, dialogueP);
-                        }, 41000);
-                        setTimeout(() => {
-                            $decision.style.display = "flex";
-                            $decision_opt[0].style.display = "flex";
+                            speech(npc1_speech.speech_1, dialogueP);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/RicardoTalk.png";
+                                speech(this.speech.daniel.speech_1, dialogueP);
+                            }, 7500);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/DanielTalk.png";
+                                speech(npc1_speech.speech_2, dialogueP);
+                            }, 14000);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/RicardoTalk.png";
+                                speech(this.speech.daniel.speech_2, dialogueP);
+                            }, 23000);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/DanielTalk.png";
+                                speech(npc1_speech.speech_3, dialogueP);
+                            }, 25000);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/DanielTalk.png";
+                                speech(npc1_speech.speech_4, dialogueP);
+                            }, 32000);
+                            setTimeout(() => {
+                                dialogueIMG.src = "./img/DanielTalk.png";
+                                speech(npc1_speech.speech_5, dialogueP);
+                            }, 41000);
+                            setTimeout(() => {
+                                $decision.style.display = "flex";
+                                $decision_opt[0].style.display = "flex";
 
-                            vagas[0].addEventListener("click", () => {
-                                vaga1 = true;
-                                $decision.style.display = "none";
-                                $decision_opt.forEach((opts) => {
-                                    opts.style.display = "none";
+                                vagas[0].addEventListener("click", () => {
+                                    vaga1 = true;
+                                    $decision.style.display = "none";
+                                    $decision_opt.forEach((opts) => {
+                                        opts.style.display = "none";
+                                    });
+                                    vagas.forEach((btn) => {
+                                        btn.removeEventListener;
+                                    });
+                                    daniel = false;
+                                    canTalk = setInterval(() => {
+                                        player.interact();
+                                    }, 100);
                                 });
-                                vagas.forEach((btn) => {
-                                    btn.removeEventListener;
+                                vagas[1].addEventListener("click", () => {
+                                    vaga2 = true;
+                                    $decision.style.display = "none";
+                                    $decision_opt.forEach((opts) => {
+                                        opts.style.display = "none";
+                                    });
+                                    vagas.forEach((btn) => {
+                                        btn.removeEventListener;
+                                    });
+                                    daniel = false;
+                                    canTalk = setInterval(() => {
+                                        player.interact();
+                                    }, 100);
                                 });
-                                isTalking = false;
-                            });
-                            vagas[1].addEventListener("click", () => {
-                                vaga2 = true;
-                                $decision.style.display = "none";
-                                $decision_opt.forEach((opts) => {
-                                    opts.style.display = "none";
-                                });
-                                vagas.forEach((btn) => {
-                                    btn.removeEventListener;
-                                });
-                                isTalking = false;
-                            });
-                        }, 44500);
-                    } else {
-                        control = true;
-                        dialogueBox.style.display = "none";
-                        dialogueP.innerHTML = "";
-                        isTalking = false;
+                            }, 44500);
+                        } else {
+                            control = true;
+                            dialogueBox.style.display = "none";
+                            dialogueP.innerHTML = "";
+                            isTalking = false;
+                        }
                     }
                 }
             }
@@ -456,6 +466,7 @@ function game() {
         // -----------------------------------------------------------------------------------------------
 
         function firstScene() {
+            daniel = true;
             isFirtScene = true;
             scrollOffset = 0;
             platformRoad = createSprite(spritePlatformRoad);
@@ -473,10 +484,11 @@ function game() {
                 });
             }, 60);
 
-            // canTalk = setInterval(() => {
-            //     player.interact();
-            // }, 100);
+            canTalk = setInterval(() => {
+                player.interact();
+            }, 100);
         }
+
         // -----------------------------------------------------------------------------------------------
 
         addEventListener("keydown", ({ key }) => {

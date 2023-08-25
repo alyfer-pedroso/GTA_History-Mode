@@ -98,7 +98,7 @@ $menu_btn.addEventListener("click", () => {
     }, 28000);
 });
 
-callGame();
+// callGame();
 function callGame() {
     isGame = true;
     $menu.style.display = "none";

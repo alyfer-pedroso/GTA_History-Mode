@@ -605,7 +605,7 @@ function callGame() {
     // -----------------------------------------------------------------------------------------------
 
     function firstScene() {
-        daniel = false;
+        daniel = true;
         banco = true;
         isFirtScene = true;
         scrollOffset = 0;

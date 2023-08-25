@@ -24,6 +24,7 @@ let player = null;
 
 // NPC
 const maverickIdleRight = "./img/maverickIdleRight (1).png";
+const door = "./img/doorBank (2).png";
 
 // SCENE
 const spritePlatformRoad = "./img/platformRoadB.png";
@@ -44,8 +45,12 @@ const $sounds = document.querySelectorAll("audio");
 const $decision = document.querySelector(".decision");
 const $decision_opt = $decision.querySelectorAll("div");
 const vagas = $decision_opt[0].querySelectorAll(".btns");
+const contas = $decision_opt[1].querySelectorAll(".btns");
 let vaga1 = false;
 let vaga2 = false;
+let contaCo = false;
+let contaSa = false;
+let contaPo = false;
 
 $decision.style.display = "none";
 $decision_opt.forEach((opts) => {
@@ -59,6 +64,7 @@ let dialogueP = document.querySelector(".dialogue p");
 let isInteract = false;
 let npcs = null;
 let daniel = false;
+let banco = false;
 
 function typeWritter(text, el) {
     const textArr = text.innerHTML.split("");
@@ -73,7 +79,7 @@ function typeWritter(text, el) {
 const npc1_speech = {
     speech_1: "Ricardo, boa tarde. Como eu te disse no telefone, você foi escolhido para entrar na empresa, mas precisa fazer uma decisão.",
     speech_2: "É o seguinte: temos duas vagas aqui na empresa, VAGA A: salário é maior, mas com menos benefícios. VAGA B: salário menor, mas com mais benefícios.",
-    speech_3: "Na VAGA A  • Salário de R$ 4.000  • Vale-refeição  • Vale-transporte  • 9 horas de trabalho",
+    speech_3: "Na VAGA A  • Salário de R$ 3.250  • Vale-refeição  • Vale-transporte  • 10 horas de trabalho",
     speech_4: "Na VAGA B  • Salário de R$ 2.000  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
     speech_5: "Eae, qual você prefere?",
     speech_6: "Sábia decisão, Ricardo.",
@@ -92,7 +98,7 @@ $menu_btn.addEventListener("click", () => {
     }, 28000);
 });
 
-// callGame();
+callGame();
 function callGame() {
     isGame = true;
     $menu.style.display = "none";
@@ -101,8 +107,8 @@ function callGame() {
     class Player {
         constructor(x, y) {
             this.position = {
-                x: y,
-                y: x,
+                x: x,
+                y: y,
             };
             this.velocity = {
                 x: 0,
@@ -135,6 +141,18 @@ function callGame() {
                     speech_3: "Bom, eu ja vou indo. Preciso passar no banco aqui da esquina para criar a minha conta. Até amanhã!",
                     speech_vaga1: "Um salário maior é a melhor opção para meu início de carreira. Eu escolho a oferta com o salário mais alto e menos benefícios.",
                     speech_vaga2: "Eu opto pela oferta que oferece um salário menor, mas com benefícios mais abrangentes. Estou ansioso para equilibrar minha vida pessoal e profissional de maneira mais saudável.",
+                },
+                banco: {
+                    speech_1: "Cheguei! Aqui é o banco Santo André.",
+                    speech_2: "Agora preciso decidir que tipo de conta bancária vou abrir.",
+                    contaCo_1: "Bom, uma conta corrente oferece uma série de vantagens financeiras, incluindo acesso fácil ao dinheiro através de saques, pagamentos e transferências, além de maior segurança em comparação com dinheiro em espécie.",
+                    contaCo_2: "Com cartões de débito e cheques, permite compras e transações convenientes, enquanto o controle financeiro é aprimorado por meio de extratos e acesso online.",
+                    contaCo_3: "É útil para receber salários, gerenciar múltiplas contas, acessar serviços bancários diversos e construir um histórico financeiro. No entanto, é importante estar ciente das possíveis taxas e encargos associados à conta.",
+                    contaSa_1: "Uma conta salarial apresenta vantagens como o recebimento direto e seguro do salário, acesso fácil aos fundos através de cartão de débito, possibilidade de efetuar pagamentos e transferências, controle financeiro por meio de extratos detalhados e agilidade nos processos. ",
+                    contaSa_2: "Com isenção de tarifas em muitos casos, a conta salarial oferece comodidade ao receber depósitos diretos, acesso a benefícios do empregador, facilidade na comprovação de renda e foco na economia, além de permitir acesso a serviços bancários e investimentos.",
+                    contaSa_3: "Ela é uma solução prática para gerir eficazmente o salário e facilitar várias operações financeiras do cotidiano.",
+                    contaPo_1: "Uma conta poupança oferece benefícios como rentabilidade modesta, segurança, disciplina financeira e acesso controlado aos fundos, tornando-a uma opção atrativa para economizar dinheiro e alcançar metas financeiras específicas.",
+                    contaPo_2: "Embora as taxas de juros sejam geralmente baixas, a conta poupança proporciona uma alternativa segura para manter dinheiro em casa, com a vantagem adicional de serviços bancários, planejamento financeiro e proteção contra inflação.",
                 },
             };
         }
@@ -359,6 +377,106 @@ function callGame() {
                     dialogueP.innerHTML = "";
                 }
             }
+
+            if (this.position.x + this.width - 100 >= npcs[1].position.x && this.position.x <= npcs[1].position.x + npcs[1].width) {
+                if (banco == true) {
+                    isInteract = true;
+                    control = false;
+                    this.currentSprite = this.sprites.idle.right;
+                    keys.left.pressed = false;
+                    keys.right.pressed = false;
+                    dialogueIMG.src = "./img/RicardoTalk.png";
+                    speech(this.speech.banco.speech_1, dialogueP);
+                    setTimeout(() => {
+                        speech(this.speech.banco.speech_2, dialogueP);
+                    }, 3000);
+                    setTimeout(() => {
+                        $decision.style.display = "flex";
+                        $decision_opt[1].style.display = "block";
+                        setTimeout(() => {
+                            $decision_opt[1].style.opacity = 1;
+                            dialogueBox.style.display = "none";
+                            dialogueP.innerHTML = "";
+                        }, 100);
+
+                        contas[0].addEventListener("click", () => {
+                            contaCo = true;
+                            setTimeout(() => {
+                                $decision_opt[1].style.opacity = 0;
+                            }, 100);
+                            setTimeout(() => {
+                                $decision.style.display = "none";
+                                $decision_opt.forEach((opts) => {
+                                    opts.style.display = "none";
+                                });
+                                contas.forEach((btn) => {
+                                    btn.removeEventListener;
+                                });
+                            }, 2000);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaCo_1, dialogueP);
+                            }, 3500);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaCo_2, dialogueP);
+                            }, 18500);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaCo_3, dialogueP);
+                            }, 30000);
+                        });
+
+                        contas[1].addEventListener("click", () => {
+                            contaSa = true;
+                            setTimeout(() => {
+                                $decision_opt[1].style.opacity = 0;
+                            }, 100);
+                            setTimeout(() => {
+                                $decision.style.display = "none";
+                                $decision_opt.forEach((opts) => {
+                                    opts.style.display = "none";
+                                });
+                                contas.forEach((btn) => {
+                                    btn.removeEventListener;
+                                });
+                            }, 2000);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaSa_1, dialogueP);
+                            }, 3500);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaSa_2, dialogueP);
+                            }, 19000);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaSa_3, dialogueP);
+                            }, 33500);
+                        });
+
+                        contas[2].addEventListener("click", () => {
+                            contaPo = true;
+                            setTimeout(() => {
+                                $decision_opt[1].style.opacity = 0;
+                            }, 100);
+                            setTimeout(() => {
+                                $decision.style.display = "none";
+                                $decision_opt.forEach((opts) => {
+                                    opts.style.display = "none";
+                                });
+                                contas.forEach((btn) => {
+                                    btn.removeEventListener;
+                                });
+                            }, 2000);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaPo_1, dialogueP);
+                            }, 3500);
+                            setTimeout(() => {
+                                speech(this.speech.banco.contaPo_2, dialogueP);
+                            }, 19000);
+                        });
+                    }, 7000);
+                } else {
+                    control = true;
+                    dialogueBox.style.display = "none";
+                    dialogueP.innerHTML = "";
+                }
+            }
         }
     }
 
@@ -487,25 +605,19 @@ function callGame() {
     // -----------------------------------------------------------------------------------------------
 
     function firstScene() {
-        daniel = true;
+        daniel = false;
+        banco = true;
         isFirtScene = true;
         scrollOffset = 0;
         platformRoad = createSprite(spritePlatformRoad);
 
-        player = new Player(100, 0);
+        player = new Player(0, 280);
 
         platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 2 + 3500, -458, createSprite(bank))];
 
-        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
+        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5), new NPC(platformRoad.width * 2 + 3832, 52, 256, 252, door, door, 256, 232, 0)];
 
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
-
-        playerFrames = setInterval(() => {
-            player.animate();
-            npcs.forEach((npc) => {
-                npc.animate();
-            });
-        }, 60);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -574,4 +686,12 @@ function callGame() {
     });
     start();
     window.setInterval(loop, 1000 / 60);
+    if (isGame == true) {
+        playerFrames = setInterval(() => {
+            player.animate();
+            npcs.forEach((npc) => {
+                npc.animate();
+            });
+        }, 60);
+    }
 }

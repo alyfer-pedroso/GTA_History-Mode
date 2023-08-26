@@ -23,7 +23,7 @@ body {
     background-color: #111;
 }
 
-div {
+#game {
     position: relative;
     width: 1024px;
     height: 576px;
@@ -89,6 +89,18 @@ div {
     margin: 4rem 0;
     line-height: 1.15;
 }
+.playing {
+    position: absolute;
+    width: 152px;
+    height: 142px;
+    background-image: url(../img/playingRight.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    bottom: 150px;
+    left: 40%;
+    animation: playing 0.5s steps(6) infinite;
+    display: none;
+}
 
 .dialogue {
     position: absolute;
@@ -114,6 +126,21 @@ div {
     font-family: pixel;
     box-shadow: 10px 15px 20px black;
     align-self: center;
+}
+
+.painel {
+    position: absolute;
+    background-color: #00000089;
+    color: white;
+    font-family: pixel;
+    font-size: 1rem;
+    padding: 1.5rem;
+    border: 0;
+    border-radius: 0;
+}
+.painel b {
+    color: lightgreen;
+    font-weight: bold;
 }
 
 .decision {
@@ -229,5 +256,14 @@ canvas {
 
     to {
         opacity: 1;
+    }
+}
+
+@keyframes playing {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -910px 0;
     }
 }

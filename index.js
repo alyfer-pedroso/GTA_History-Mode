@@ -48,12 +48,16 @@ const $decision = document.querySelector(".decision");
 const $decision_opt = $decision.querySelectorAll("div");
 const vagas = $decision_opt[0].querySelectorAll(".btns");
 const contas = $decision_opt[1].querySelectorAll(".btns");
+const $playerPlaying = document.querySelector(".playing");
+const $painel = document.querySelector(".painel");
+const $money = $painel.querySelector("b");
 let vaga1 = false;
 let vaga2 = false;
 let contaCo = false;
 let contaSa = false;
 let contaPo = false;
 
+$painel.style.display = "none";
 $decision.style.display = "none";
 $decision_opt.forEach((opts) => {
     opts.style.display = "none";
@@ -80,7 +84,7 @@ function typeWritter(text, el) {
 
 const textForScene = {
     epilogue: "Você vai assumir o papel de um jovem adulto chamado Ricardo, que está prestes a enfrentar os desafios do mundo financeiro após sair da faculdade. O objetivo é ajudar Ricardo a tomar decisões sábias e informadas sobre assuntos relacionados à educação financeira, desde a abertura da primeira conta bancária até o investimento em ações e planejamento para o futuro.",
-    scene_2: "Um mês se passou e Ricardo recebeu seu primeiro salário...",
+    scene_2: "Um mês se passou e Ricardo recebeu seu primeiro salário. Ele está muito feliz...",
 };
 
 const npc1_speech = {
@@ -103,9 +107,9 @@ $menu_btn.addEventListener("click", () => {
     setTimeout(() => {
         callGame();
     }, 28000);
-    setTimeout(() => {
-        $sounds[1].play();
-    }, 307800);
+    // setTimeout(() => {
+    //     $sounds[1].play();
+    // }, 307800);
 });
 
 // callGame();
@@ -174,7 +178,7 @@ function callGame() {
         moviment() {
             if (keys.right.pressed && player.position.x < 400) {
                 this.velocity.x = 5;
-                $sounds[2].play();
+                $sounds[3].play();
                 if (!this.canJump) {
                     this.currentSprite = this.sprites.jump.right;
                 } else {
@@ -182,7 +186,7 @@ function callGame() {
                 }
             } else if ((keys.left.pressed && this.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && this.position.x > 0)) {
                 this.velocity.x = -5;
-                $sounds[2].play();
+                $sounds[3].play();
                 if (!this.canJump) {
                     this.currentSprite = this.sprites.jump.left;
                 } else {
@@ -190,10 +194,10 @@ function callGame() {
                 }
             } else {
                 this.velocity.x = 0;
-                $sounds[2].pause();
+                $sounds[3].pause();
 
-                if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || (keys.right.pressed && !isFirtScene)) {
-                    $sounds[2].play();
+                if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || keys.right.pressed) {
+                    $sounds[3].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.right;
                     } else {
@@ -210,7 +214,7 @@ function callGame() {
                     });
                     scrollOffset += 5;
                 } else if (keys.left.pressed && scrollOffset > 0) {
-                    $sounds[2].play();
+                    $sounds[3].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.left;
                     } else {
@@ -251,7 +255,7 @@ function callGame() {
             if (this.canJump) {
                 this.velocity.y -= 25;
                 this.canJump = false;
-                $sounds[3].play();
+                $sounds[4].play();
             }
 
             if (this.currentSprite == this.sprites.idle.right) {
@@ -276,7 +280,11 @@ function callGame() {
             });
 
             if (this.position.y > canvas.height) {
-                start();
+                if (isFirtScene) {
+                    firstScene();
+                } else if (thirdScene) {
+                    thirdScene();
+                }
             }
         }
 
@@ -295,217 +303,222 @@ function callGame() {
         }
 
         interact() {
-            //player with Daniel
-            if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
-                if (daniel == true) {
-                    isInteract = true;
-                    control = false;
-                    daniel = false;
-                    this.currentSprite = this.sprites.idle.right;
-                    keys.left.pressed = false;
-                    keys.right.pressed = false;
-                    dialogueIMG.src = "./img/DanielTalk.png";
-                    speech(npc1_speech.speech_1, dialogueP);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/RicardoTalk.png";
-                        speech(this.speech.daniel.speech_1, dialogueP);
-                    }, 7500);
-                    setTimeout(() => {
+            if (isFirtScene) {
+                //player with Daniel
+                if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
+                    if (daniel == true) {
+                        isInteract = true;
+                        control = false;
+                        daniel = false;
+                        this.currentSprite = this.sprites.idle.right;
+                        keys.left.pressed = false;
+                        keys.right.pressed = false;
                         dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_2, dialogueP);
-                    }, 14000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/RicardoTalk.png";
-                        speech(this.speech.daniel.speech_2, dialogueP);
-                    }, 23000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_3, dialogueP);
-                    }, 25000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_4, dialogueP);
-                    }, 32000);
-                    setTimeout(() => {
-                        dialogueIMG.src = "./img/DanielTalk.png";
-                        speech(npc1_speech.speech_5, dialogueP);
-                    }, 41000);
-                    setTimeout(() => {
-                        $decision.style.display = "flex";
-                        $decision_opt[0].style.display = "flex";
-
-                        vagas[0].addEventListener("click", () => {
-                            vaga1 = true;
-                            $decision.style.display = "none";
-                            $decision_opt.forEach((opts) => {
-                                opts.style.display = "none";
-                            });
-                            vagas.forEach((btn) => {
-                                btn.removeEventListener;
-                            });
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/RicardoTalk.png";
-                                speech(this.speech.daniel.speech_vaga1, dialogueP);
-                            }, 1000);
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/DanielTalk.png";
-                                speech(npc1_speech.speech_6, dialogueP);
-                            }, 11000);
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/RicardoTalk.png";
-                                speech(this.speech.daniel.speech_3, dialogueP);
-                            }, 14500);
-                            setTimeout(() => {
-                                daniel = false;
-                                isInteract = false;
-                            }, 21000);
-                        });
-                        vagas[1].addEventListener("click", () => {
-                            vaga2 = true;
-                            $decision.style.display = "none";
-                            $decision_opt.forEach((opts) => {
-                                opts.style.display = "none";
-                            });
-                            vagas.forEach((btn) => {
-                                btn.removeEventListener;
-                            });
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/RicardoTalk.png";
-                                speech(this.speech.daniel.speech_vaga2, dialogueP);
-                            }, 1000);
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/DanielTalk.png";
-                                speech(npc1_speech.speech_6, dialogueP);
-                            }, 12000);
-                            setTimeout(() => {
-                                dialogueIMG.src = "./img/RicardoTalk.png";
-                                speech(this.speech.daniel.speech_3, dialogueP);
-                            }, 15000);
-                            setTimeout(() => {
-                                daniel = false;
-                                isInteract = false;
-                            }, 21500);
-                        });
-                    }, 44500);
-                } else {
-                    control = true;
-                    dialogueBox.style.display = "none";
-                    dialogueP.innerHTML = "";
-                }
-            }
-
-            if (this.position.x + this.width - 100 >= npcs[1].position.x && this.position.x <= npcs[1].position.x + npcs[1].width) {
-                if (banco == true) {
-                    isInteract = true;
-                    control = false;
-                    this.currentSprite = this.sprites.idle.right;
-                    keys.left.pressed = false;
-                    keys.right.pressed = false;
-                    dialogueIMG.src = "./img/RicardoTalk.png";
-                    speech(this.speech.banco.speech_1, dialogueP);
-                    setTimeout(() => {
-                        speech(this.speech.banco.speech_2, dialogueP);
-                    }, 3000);
-                    setTimeout(() => {
-                        $decision.style.display = "flex";
-                        $decision_opt[1].style.display = "block";
+                        speech(npc1_speech.speech_1, dialogueP);
                         setTimeout(() => {
-                            $decision_opt[1].style.opacity = 1;
-                            dialogueBox.style.display = "none";
-                            dialogueP.innerHTML = "";
-                        }, 100);
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.daniel.speech_1, dialogueP);
+                        }, 7500);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_2, dialogueP);
+                        }, 14000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.daniel.speech_2, dialogueP);
+                        }, 23000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_3, dialogueP);
+                        }, 25000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_4, dialogueP);
+                        }, 32000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_5, dialogueP);
+                        }, 41000);
+                        setTimeout(() => {
+                            $decision.style.display = "flex";
+                            $decision_opt[0].style.display = "flex";
 
-                        contas[0].addEventListener("click", () => {
-                            contaCo = true;
-                            setTimeout(() => {
-                                $decision_opt[1].style.opacity = 0;
-                            }, 100);
-                            setTimeout(() => {
+                            vagas[0].addEventListener("click", () => {
+                                vaga1 = true;
+                                $money.innerHTML = "R$ 3.250";
                                 $decision.style.display = "none";
                                 $decision_opt.forEach((opts) => {
                                     opts.style.display = "none";
                                 });
-                                contas.forEach((btn) => {
+                                vagas.forEach((btn) => {
                                     btn.removeEventListener;
                                 });
-                            }, 2000);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaCo_1, dialogueP);
-                            }, 3500);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaCo_2, dialogueP);
-                            }, 18500);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaCo_3, dialogueP);
-                            }, 30000);
-                            setTimeout(() => {
-                                banco = false;
-                                isInteract = false;
-                                secondScene();
-                            }, 44000);
-                        });
-
-                        contas[1].addEventListener("click", () => {
-                            contaSa = true;
-                            setTimeout(() => {
-                                $decision_opt[1].style.opacity = 0;
-                            }, 100);
-                            setTimeout(() => {
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.daniel.speech_vaga1, dialogueP);
+                                }, 1000);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/DanielTalk.png";
+                                    speech(npc1_speech.speech_6, dialogueP);
+                                }, 11000);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.daniel.speech_3, dialogueP);
+                                }, 14500);
+                                setTimeout(() => {
+                                    daniel = false;
+                                    isInteract = false;
+                                }, 21000);
+                            });
+                            vagas[1].addEventListener("click", () => {
+                                vaga2 = true;
+                                $money.innerHTML = "R$ 2.000";
                                 $decision.style.display = "none";
                                 $decision_opt.forEach((opts) => {
                                     opts.style.display = "none";
                                 });
-                                contas.forEach((btn) => {
+                                vagas.forEach((btn) => {
                                     btn.removeEventListener;
                                 });
-                            }, 2000);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaSa_1, dialogueP);
-                            }, 3500);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaSa_2, dialogueP);
-                            }, 19000);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaSa_3, dialogueP);
-                            }, 33500);
-                            setTimeout(() => {
-                                banco = false;
-                                isInteract = false;
-                                secondScene();
-                            }, 40500);
-                        });
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.daniel.speech_vaga2, dialogueP);
+                                }, 1000);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/DanielTalk.png";
+                                    speech(npc1_speech.speech_6, dialogueP);
+                                }, 12000);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.daniel.speech_3, dialogueP);
+                                }, 15000);
+                                setTimeout(() => {
+                                    daniel = false;
+                                    isInteract = false;
+                                }, 21500);
+                            });
+                        }, 44500);
+                    } else {
+                        control = true;
+                        dialogueBox.style.display = "none";
+                        dialogueP.innerHTML = "";
+                    }
+                }
 
-                        contas[2].addEventListener("click", () => {
-                            contaPo = true;
+                //player with door
+                if (this.position.x + this.width - 100 >= npcs[1].position.x && this.position.x <= npcs[1].position.x + npcs[1].width) {
+                    if (banco == true) {
+                        isInteract = true;
+                        control = false;
+                        this.currentSprite = this.sprites.idle.right;
+                        keys.left.pressed = false;
+                        keys.right.pressed = false;
+                        dialogueIMG.src = "./img/RicardoTalk.png";
+                        speech(this.speech.banco.speech_1, dialogueP);
+                        setTimeout(() => {
+                            speech(this.speech.banco.speech_2, dialogueP);
+                        }, 3000);
+                        setTimeout(() => {
+                            $decision.style.display = "flex";
+                            $decision_opt[1].style.display = "block";
                             setTimeout(() => {
-                                $decision_opt[1].style.opacity = 0;
+                                $decision_opt[1].style.opacity = 1;
+                                dialogueBox.style.display = "none";
+                                dialogueP.innerHTML = "";
                             }, 100);
-                            setTimeout(() => {
-                                $decision.style.display = "none";
-                                $decision_opt.forEach((opts) => {
-                                    opts.style.display = "none";
-                                });
-                                contas.forEach((btn) => {
-                                    btn.removeEventListener;
-                                });
-                            }, 2000);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaPo_1, dialogueP);
-                            }, 3500);
-                            setTimeout(() => {
-                                speech(this.speech.banco.contaPo_2, dialogueP);
-                            }, 19000);
-                            setTimeout(() => {
-                                banco = false;
-                                isInteract = false;
-                                secondScene();
-                            }, 32000);
-                        });
-                    }, 7000);
-                } else {
-                    control = true;
-                    dialogueBox.style.display = "none";
-                    dialogueP.innerHTML = "";
+
+                            contas[0].addEventListener("click", () => {
+                                contaCo = true;
+                                setTimeout(() => {
+                                    $decision_opt[1].style.opacity = 0;
+                                }, 100);
+                                setTimeout(() => {
+                                    $decision.style.display = "none";
+                                    $decision_opt.forEach((opts) => {
+                                        opts.style.display = "none";
+                                    });
+                                    contas.forEach((btn) => {
+                                        btn.removeEventListener;
+                                    });
+                                }, 2000);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaCo_1, dialogueP);
+                                }, 3500);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaCo_2, dialogueP);
+                                }, 18500);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaCo_3, dialogueP);
+                                }, 30000);
+                                setTimeout(() => {
+                                    banco = false;
+                                    isInteract = false;
+                                    secondScene();
+                                }, 44000);
+                            });
+
+                            contas[1].addEventListener("click", () => {
+                                contaSa = true;
+                                setTimeout(() => {
+                                    $decision_opt[1].style.opacity = 0;
+                                }, 100);
+                                setTimeout(() => {
+                                    $decision.style.display = "none";
+                                    $decision_opt.forEach((opts) => {
+                                        opts.style.display = "none";
+                                    });
+                                    contas.forEach((btn) => {
+                                        btn.removeEventListener;
+                                    });
+                                }, 2000);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaSa_1, dialogueP);
+                                }, 3500);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaSa_2, dialogueP);
+                                }, 19000);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaSa_3, dialogueP);
+                                }, 33500);
+                                setTimeout(() => {
+                                    banco = false;
+                                    isInteract = false;
+                                    secondScene();
+                                }, 40500);
+                            });
+
+                            contas[2].addEventListener("click", () => {
+                                contaPo = true;
+                                setTimeout(() => {
+                                    $decision_opt[1].style.opacity = 0;
+                                }, 100);
+                                setTimeout(() => {
+                                    $decision.style.display = "none";
+                                    $decision_opt.forEach((opts) => {
+                                        opts.style.display = "none";
+                                    });
+                                    contas.forEach((btn) => {
+                                        btn.removeEventListener;
+                                    });
+                                }, 2000);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaPo_1, dialogueP);
+                                }, 3500);
+                                setTimeout(() => {
+                                    speech(this.speech.banco.contaPo_2, dialogueP);
+                                }, 19000);
+                                setTimeout(() => {
+                                    banco = false;
+                                    isInteract = false;
+                                    secondScene();
+                                }, 35000);
+                            });
+                        }, 7000);
+                    } else {
+                        control = true;
+                        dialogueBox.style.display = "none";
+                        dialogueP.innerHTML = "";
+                    }
                 }
             }
         }
@@ -585,11 +598,11 @@ function callGame() {
         textArr.forEach((char, i) => {
             setTimeout(() => {
                 el.innerHTML += char;
-                $sounds[4].play();
+                $sounds[5].play();
             }, 55 * i);
         });
         setTimeout(() => {
-            $sounds[4].pause();
+            $sounds[5].pause();
         }, text.length * 55);
     }
 
@@ -608,20 +621,24 @@ function callGame() {
 
     function start() {
         firstScene();
+        // secondScene();
+        // thirdScene();
     }
 
     function update() {
-        if (!isInteract) {
-            player.interact();
+        if (isGame) {
+            if (!isInteract) {
+                player.interact();
+            }
         }
     }
 
     function render() {
         // requestAnimationFrame(render);
-        c.fillStyle = "white";
-        c.fillRect(0, 0, canvas.width, canvas.height);
-
         if (isGame) {
+            c.fillStyle = "white";
+            c.fillRect(0, 0, canvas.width, canvas.height);
+
             genericObjects.forEach((genericObject) => {
                 genericObject.draw();
             });
@@ -629,9 +646,11 @@ function callGame() {
                 platform.draw();
             });
 
-            npcs.forEach((npc) => {
-                npc.draw();
-            });
+            if (isFirtScene) {
+                npcs.forEach((npc) => {
+                    npc.draw();
+                });
+            }
             player.draw();
             player.gravity();
             player.collision();
@@ -646,6 +665,7 @@ function callGame() {
         banco = true;
         isFirtScene = true;
         scrollOffset = 0;
+
         platformRoad = createSprite(spritePlatformRoad);
 
         player = new Player(0, 280);
@@ -658,19 +678,48 @@ function callGame() {
     }
 
     function secondScene() {
+        $sounds[0].pause();
+        $sounds[1].pause();
+        $sounds[2].play();
         isFirtScene = false;
         isSecScene = true;
-        scrollOffset = 0;
+        isGame = false;
         player = null;
         control = false;
+        $playerPlaying.style.display = "block";
         dialogueBox.style.display = "none";
         dialogueP.innerHTML = "";
         platform = null;
         npcs = null;
         genericObjects = null;
-        isGame = false;
+        scrollOffset = 0;
         $textScene.style.display = "block";
         typeWritter(textForScene.scene_2, $textScene.querySelector("p"));
+
+        setTimeout(() => {
+            thirdScene();
+        }, 9500);
+    }
+
+    function thirdScene() {
+        isGame = true;
+        control = true;
+        isSecScene = false;
+        isThirdScene = true;
+        $playerPlaying.style.display = "none";
+        $textScene.style.display = "none";
+        $painel.style.display = "block";
+        platformRoad = createSprite(spritePlatformRoad);
+
+        player = new Player(0, 280);
+        npcs = platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad)];
+        genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
+
+        if (vaga1) {
+            $money.innerHTML = "R$ 3.250";
+        } else if (vaga2) {
+            $money.innerHTML = "R$ 2.000";
+        }
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -739,12 +788,14 @@ function callGame() {
     });
     start();
     window.setInterval(loop, 1000 / 60);
-    if (isGame == true) {
+    if (isGame) {
         playerFrames = setInterval(() => {
             player.animate();
-            npcs.forEach((npc) => {
-                npc.animate();
-            });
+            if (isFirtScene) {
+                npcs.forEach((npc) => {
+                    npc.animate();
+                });
+            }
         }, 60);
     }
 }

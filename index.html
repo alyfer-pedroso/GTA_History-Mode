@@ -14,13 +14,16 @@
     </head>
 
     <body>
-        <div>
+        <div id="game">
             <div class="sounds">
                 <audio class="soundTrack" controls>
                     <source src="music/music0.mp3" type="audio/mp3" />
                 </audio>
                 <audio class="soundTrack" controls>
                     <source src="music/music1.mp3" type="audio/mp3" />
+                </audio>
+                <audio class="soundTrack" controls>
+                    <source src="music/music2.mp3" type="audio/mp3" />
                 </audio>
                 <audio class="soundTrack" controls loop>
                     <source src="sfx/step.mp3" type="audio/mp3" />
@@ -38,11 +41,18 @@
                 <button class="menu-btn">Start</button>
             </div>
 
-            <div class="textScene"><p></p></div>
+            <div class="textScene">
+                <p></p>
+            </div>
+            <div class="playing"></div>
 
             <div class="dialogue">
                 <img src="" />
                 <p></p>
+            </div>
+
+            <div class="painel">
+                <p class="money">Seu dinheiro: <b>R$ 0.000</b></p>
             </div>
 
             <div class="decision">

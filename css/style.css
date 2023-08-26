@@ -53,16 +53,20 @@ body {
     transition: background-color 15s ease-in-out;
 }
 .menu-bg {
-    background-image: url(../img/bg.png);
+    background-image: url(../img/bg3.png);
     background-repeat: no-repeat;
     background-size: cover;
 }
 .menu-btn {
     position: absolute;
     font-family: gta;
-    font-size: 3rem;
+    background-image: url(../img/bg-btn2.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 114px;
+    height: 48px;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 5px;
     border: none;
     opacity: 0;
     animation: menuBtn 1s ease-in-out 1s forwards;

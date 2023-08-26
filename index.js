@@ -25,6 +25,7 @@ let player = null;
 // NPC
 const maverickIdleRight = "./img/maverickIdleRight (1).png";
 const door = "./img/doorBank (2).png";
+const seller = "./img/sellerLeft (1).png";
 
 // SCENE
 const spritePlatformRoad = "./img/platformRoadB.png";
@@ -32,6 +33,8 @@ const spriteBackground = "./img/background.png";
 const spriteBuildings = "./img/hills.png";
 const spriteCondos = "./img/condosLuxury (1).png";
 const bank = "./img/bank (1).png";
+const building1 = "./img/building 1.png";
+const building2 = "./img/building 2.png";
 let scrollOffset = 0;
 let platforms = null;
 let genericObjects = null;
@@ -71,6 +74,7 @@ let isInteract = false;
 let npcs = null;
 let daniel = false;
 let banco = false;
+let sell = false;
 
 function typeWritter(text, el) {
     const textArr = text.split("");
@@ -168,6 +172,10 @@ function callGame() {
                     contaPo_1: "Uma conta poupança oferece benefícios como rentabilidade modesta, segurança, disciplina financeira e acesso controlado aos fundos, tornando-a uma opção atrativa para economizar dinheiro e alcançar metas financeiras específicas.",
                     contaPo_2: "Embora as taxas de juros sejam geralmente baixas, a conta poupança proporciona uma alternativa segura para manter dinheiro em casa, com a vantagem adicional de serviços bancários, planejamento financeiro e proteção contra inflação.",
                 },
+                sobre_apt: {
+                    speech_1: "Agora preciso achar um apartamento adequado para min, mas que caiba no meu orçamento.",
+                    speech_2: `Atualmente eu possuo ${$money.innerHTML}`,
+                },
             };
         }
 
@@ -196,7 +204,7 @@ function callGame() {
                 this.velocity.x = 0;
                 $sounds[3].pause();
 
-                if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || keys.right.pressed) {
+                if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || (keys.right.pressed && !isFirtScene && !isThirdScene) || (keys.right.pressed && scrollOffset < 1625 && isThirdScene)) {
                     $sounds[3].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.right;
@@ -521,6 +529,24 @@ function callGame() {
                     }
                 }
             }
+
+            if (isThirdScene) {
+                if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
+                    if (sell == true) {
+                        isInteract = true;
+                        control = false;
+                        daniel = false;
+                        this.currentSprite = this.sprites.idle.right;
+                        keys.left.pressed = false;
+                        keys.right.pressed = false;
+                        dialogueIMG.src = "./img/DanielTalk.png";
+                    } else {
+                        control = true;
+                        dialogueBox.style.display = "none";
+                        dialogueP.innerHTML = "";
+                    }
+                }
+            }
         }
     }
 
@@ -645,12 +671,9 @@ function callGame() {
             platforms.forEach((platform) => {
                 platform.draw();
             });
-
-            if (isFirtScene) {
-                npcs.forEach((npc) => {
-                    npc.draw();
-                });
-            }
+            npcs.forEach((npc) => {
+                npc.draw();
+            });
             player.draw();
             player.gravity();
             player.collision();
@@ -702,8 +725,8 @@ function callGame() {
     }
 
     function thirdScene() {
+        scrollOffset = 0;
         isGame = true;
-        control = true;
         isSecScene = false;
         isThirdScene = true;
         $playerPlaying.style.display = "none";
@@ -711,15 +734,34 @@ function callGame() {
         $painel.style.display = "block";
         platformRoad = createSprite(spritePlatformRoad);
 
-        player = new Player(0, 280);
-        npcs = platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad)];
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
+        platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad), new Platform(platformRoad.width * 2, -520, createSprite(building1)), new Platform(platformRoad.width * 2 + 500, -230, createSprite(building2))];
+        npcs = [new NPC(platformRoad.width * 2 + 440, 290, 58, 120, seller, seller, 116, 248, 3)];
+        player = new Player(0, 280);
 
         if (vaga1) {
             $money.innerHTML = "R$ 3.250";
         } else if (vaga2) {
             $money.innerHTML = "R$ 2.000";
         }
+
+        control = false;
+        player.currentSprite = player.sprites.idle.right;
+        keys.left.pressed = false;
+        keys.right.pressed = false;
+        dialogueIMG.src = "./img/RicardoTalk.png";
+        setTimeout(() => {
+            speech(player.speech.sobre_apt.speech_1, dialogueP);
+        }, 2000);
+        setTimeout(() => {
+            speech(player.speech.sobre_apt.speech_2, dialogueP);
+        }, 9000);
+        setTimeout(() => {
+            control = true;
+            dialogueBox.style.display = "none";
+            dialogueP.innerHTML = "";
+            sell = true;
+        }, 12000);
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -791,11 +833,9 @@ function callGame() {
     if (isGame) {
         playerFrames = setInterval(() => {
             player.animate();
-            if (isFirtScene) {
-                npcs.forEach((npc) => {
-                    npc.animate();
-                });
-            }
+            npcs.forEach((npc) => {
+                npc.animate();
+            });
         }, 60);
     }
 }

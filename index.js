@@ -36,11 +36,13 @@ let scrollOffset = 0;
 let platforms = null;
 let genericObjects = null;
 let isFirtScene = false;
+let isSecScene = false;
+let isThirdScene = false;
 
 // GAME HTML PROPERTIES
 const $menu = document.querySelector(".menu");
 const $menu_btn = document.querySelector(".menu-btn");
-const $epilogue = document.querySelector(".epilogue");
+const $textScene = document.querySelector(".textScene");
 const $sounds = document.querySelectorAll("audio");
 const $decision = document.querySelector(".decision");
 const $decision_opt = $decision.querySelectorAll("div");
@@ -67,7 +69,7 @@ let daniel = false;
 let banco = false;
 
 function typeWritter(text, el) {
-    const textArr = text.innerHTML.split("");
+    const textArr = text.split("");
     el.innerHTML = "";
     textArr.forEach((char, i) => {
         setTimeout(() => {
@@ -75,6 +77,11 @@ function typeWritter(text, el) {
         }, 75 * i);
     });
 }
+
+const textForScene = {
+    epilogue: "Você vai assumir o papel de um jovem adulto chamado Ricardo, que está prestes a enfrentar os desafios do mundo financeiro após sair da faculdade. O objetivo é ajudar Ricardo a tomar decisões sábias e informadas sobre assuntos relacionados à educação financeira, desde a abertura da primeira conta bancária até o investimento em ações e planejamento para o futuro.",
+    scene_2: "Um mês se passou e Ricardo recebeu seu primeiro salário...",
+};
 
 const npc1_speech = {
     speech_1: "Ricardo, boa tarde. Como eu te disse no telefone, você foi escolhido para entrar na empresa, mas precisa fazer uma decisão.",
@@ -90,19 +97,22 @@ const npc1_speech = {
 $menu_btn.addEventListener("click", () => {
     $menu_btn.removeEventListener;
     $menu.style.display = "none";
-    $epilogue.style.display = "block";
+    $textScene.style.display = "block";
     $sounds[0].play();
-    typeWritter($epilogue.querySelector("p"), $epilogue.querySelector("p"));
+    typeWritter(textForScene.epilogue, $textScene.querySelector("p"));
     setTimeout(() => {
         callGame();
     }, 28000);
+    setTimeout(() => {
+        $sounds[1].play();
+    }, 307800);
 });
 
 // callGame();
 function callGame() {
     isGame = true;
     $menu.style.display = "none";
-    $epilogue.style.display = "none";
+    $textScene.style.display = "none";
 
     class Player {
         constructor(x, y) {
@@ -164,6 +174,7 @@ function callGame() {
         moviment() {
             if (keys.right.pressed && player.position.x < 400) {
                 this.velocity.x = 5;
+                $sounds[2].play();
                 if (!this.canJump) {
                     this.currentSprite = this.sprites.jump.right;
                 } else {
@@ -171,6 +182,7 @@ function callGame() {
                 }
             } else if ((keys.left.pressed && this.position.x > 100) || (keys.left.pressed && scrollOffset === 0 && this.position.x > 0)) {
                 this.velocity.x = -5;
+                $sounds[2].play();
                 if (!this.canJump) {
                     this.currentSprite = this.sprites.jump.left;
                 } else {
@@ -178,8 +190,10 @@ function callGame() {
                 }
             } else {
                 this.velocity.x = 0;
+                $sounds[2].pause();
 
                 if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || (keys.right.pressed && !isFirtScene)) {
+                    $sounds[2].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.right;
                     } else {
@@ -196,6 +210,7 @@ function callGame() {
                     });
                     scrollOffset += 5;
                 } else if (keys.left.pressed && scrollOffset > 0) {
+                    $sounds[2].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.left;
                     } else {
@@ -236,6 +251,7 @@ function callGame() {
             if (this.canJump) {
                 this.velocity.y -= 25;
                 this.canJump = false;
+                $sounds[3].play();
             }
 
             if (this.currentSprite == this.sprites.idle.right) {
@@ -422,6 +438,11 @@ function callGame() {
                             setTimeout(() => {
                                 speech(this.speech.banco.contaCo_3, dialogueP);
                             }, 30000);
+                            setTimeout(() => {
+                                banco = false;
+                                isInteract = false;
+                                secondScene();
+                            }, 44000);
                         });
 
                         contas[1].addEventListener("click", () => {
@@ -447,6 +468,11 @@ function callGame() {
                             setTimeout(() => {
                                 speech(this.speech.banco.contaSa_3, dialogueP);
                             }, 33500);
+                            setTimeout(() => {
+                                banco = false;
+                                isInteract = false;
+                                secondScene();
+                            }, 40500);
                         });
 
                         contas[2].addEventListener("click", () => {
@@ -469,6 +495,11 @@ function callGame() {
                             setTimeout(() => {
                                 speech(this.speech.banco.contaPo_2, dialogueP);
                             }, 19000);
+                            setTimeout(() => {
+                                banco = false;
+                                isInteract = false;
+                                secondScene();
+                            }, 32000);
                         });
                     }, 7000);
                 } else {
@@ -554,8 +585,12 @@ function callGame() {
         textArr.forEach((char, i) => {
             setTimeout(() => {
                 el.innerHTML += char;
+                $sounds[4].play();
             }, 55 * i);
         });
+        setTimeout(() => {
+            $sounds[4].pause();
+        }, text.length * 55);
     }
 
     function createSprite(imgSrc) {
@@ -586,20 +621,22 @@ function callGame() {
         c.fillStyle = "white";
         c.fillRect(0, 0, canvas.width, canvas.height);
 
-        genericObjects.forEach((genericObject) => {
-            genericObject.draw();
-        });
-        platforms.forEach((platform) => {
-            platform.draw();
-        });
+        if (isGame) {
+            genericObjects.forEach((genericObject) => {
+                genericObject.draw();
+            });
+            platforms.forEach((platform) => {
+                platform.draw();
+            });
 
-        npcs.forEach((npc) => {
-            npc.draw();
-        });
-        player.draw();
-        player.gravity();
-        player.collision();
-        player.moviment();
+            npcs.forEach((npc) => {
+                npc.draw();
+            });
+            player.draw();
+            player.gravity();
+            player.collision();
+            player.moviment();
+        }
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -618,6 +655,22 @@ function callGame() {
         npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5), new NPC(platformRoad.width * 2 + 3832, 52, 256, 252, door, door, 256, 232, 0)];
 
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
+    }
+
+    function secondScene() {
+        isFirtScene = false;
+        isSecScene = true;
+        scrollOffset = 0;
+        player = null;
+        control = false;
+        dialogueBox.style.display = "none";
+        dialogueP.innerHTML = "";
+        platform = null;
+        npcs = null;
+        genericObjects = null;
+        isGame = false;
+        $textScene.style.display = "block";
+        typeWritter(textForScene.scene_2, $textScene.querySelector("p"));
     }
 
     // -----------------------------------------------------------------------------------------------

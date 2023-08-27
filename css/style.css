@@ -72,8 +72,7 @@ body {
     animation: menuBtn 1s ease-in-out 1s forwards;
 }
 .menu-btn:active {
-    background-color: black;
-    color: #efefef;
+    background-image: url(../img/bg-btn.png);
 }
 
 .textScene {

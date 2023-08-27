@@ -38,9 +38,11 @@ const building2 = "./img/building 2.png";
 let scrollOffset = 0;
 let platforms = null;
 let genericObjects = null;
-let isFirtScene = false;
+let isFirtsScene = false;
 let isSecScene = false;
 let isThirdScene = false;
+let isFourthScene = false;
+let isFifthScene = false;
 
 // GAME HTML PROPERTIES
 const $menu = document.querySelector(".menu");
@@ -90,6 +92,7 @@ function typeWritter(text, el) {
 const textForScene = {
     epilogue: "Você vai assumir o papel de um jovem adulto chamado Ricardo, que está prestes a enfrentar os desafios do mundo financeiro após sair da faculdade. O objetivo é ajudar Ricardo a tomar decisões sábias e informadas sobre assuntos relacionados à educação financeira, desde a abertura da primeira conta bancária até o investimento em ações e planejamento para o futuro.",
     scene_2: "Um mês se passou e Ricardo recebeu seu primeiro salário. Ele está muito feliz...",
+    scene_4: "Ricardo percebeu que se manter só no salário do seu trabalho atual não é o suficiente para se manter na vida. Agora ele está em busca de um conselho para iniciar corretamente sua vida financeira e para isso ele vai atrá de um amigo.",
 };
 
 const npc1_speech = {
@@ -107,6 +110,7 @@ const npc2_speech = {
     speech_3: "Claro. O Apartamento da esquerda é mais compacto. Possui  • Aluguel mensal: R$ 1.200  • Depósito de segurança: R$ 1.200  • Despesas de utilidades: R$ 150.",
     speech_4: "O Apartamento da direita já é mais espaçoso. Possui  • Aluguel mensal: R$ 1.800  • Depósito de segurança: R$ 1.500  • Despesas de utilidades: R$ 200.",
     speech_5: "De quanto é sua renda mensal?",
+    speech_6: "Negócio fechado! Foi um prazer fazer negócios com o senhor.",
 };
 
 //-----------------------------------------------------------------------------------------------
@@ -191,6 +195,8 @@ function callGame() {
                     speech_cant: "Vish, vou ter que ficar com o menor, já que economizará no aluguel mensal e no depósito de segurança, além de gastar menos em despesas de utilidades. Só que o espaço é mais limitado né.",
                     speech_can: "Pela minha renda eu consigo alugar qualquer um dos dois. Hum... Qual eu pego?",
                     speech_time: null,
+                    speech_apt1: "Com esse apartamento economizarei no aluguel mensal e no depósito de segurança, além de gastar menos em despesas de utilidades. Bom, o espaço vai ser menor.",
+                    speech_apt2: "Agora com esse apartamento, eu terei mais espaço, mas o aluguel, o depósito de segurança e as despesas de utilidades serão mais altos.",
                 },
             };
         }
@@ -220,7 +226,7 @@ function callGame() {
                 this.velocity.x = 0;
                 $sounds[3].pause();
 
-                if ((keys.right.pressed && scrollOffset < 5340 && isFirtScene) || (keys.right.pressed && !isFirtScene && !isThirdScene) || (keys.right.pressed && scrollOffset < 1625 && isThirdScene)) {
+                if ((keys.right.pressed && scrollOffset < 5340 && isFirtsScene) || (keys.right.pressed && !isFirtsScene && !isThirdScene) || (keys.right.pressed && scrollOffset < 1625 && isThirdScene) || (keys.right.pressed && scrollOffset < 5340 && isFifthScene)) {
                     $sounds[3].play();
                     if (!this.canJump) {
                         this.currentSprite = this.sprites.jump.right;
@@ -304,10 +310,12 @@ function callGame() {
             });
 
             if (this.position.y > canvas.height) {
-                if (isFirtScene) {
+                if (isFirtsScene) {
                     firstScene();
-                } else if (thirdScene) {
+                } else if (isThirdScene) {
                     thirdScene();
+                } else if (isFifthScene) {
+                    fifthScene();
                 }
             }
         }
@@ -327,7 +335,7 @@ function callGame() {
         }
 
         interact() {
-            if (isFirtScene) {
+            if (isFirtsScene) {
                 //player with Daniel
                 if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
                     if (daniel == true) {
@@ -551,7 +559,6 @@ function callGame() {
                     if (sell == true) {
                         isInteract = true;
                         control = false;
-                        daniel = false;
                         this.currentSprite = this.sprites.idle.right;
                         keys.left.pressed = false;
                         keys.right.pressed = false;
@@ -605,6 +612,20 @@ function callGame() {
                                 $money.style.color = "orange";
                                 $decision.style.display = "none";
                                 $decision_opt[2].style.display = "none";
+
+                                dialogueIMG.src = "./img/SellerTalk.png";
+                                speech(npc2_speech.speech_6, dialogueP);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.sobre_apt.speech_apt1, dialogueP);
+                                }, 5000);
+                                setTimeout(() => {
+                                    control = false;
+                                    dialogueBox.style.display = "none";
+                                    dialogueP.innerHTML = "";
+                                    sell = false;
+                                    fourthScene();
+                                }, 15000);
                             });
 
                             apts[1].addEventListener("click", () => {
@@ -613,12 +634,36 @@ function callGame() {
                                 $money.style.color = "orange";
                                 $decision.style.display = "none";
                                 $decision_opt[2].style.display = "none";
+
+                                dialogueIMG.src = "./img/SellerTalk.png";
+                                speech(npc2_speech.speech_6, dialogueP);
+                                setTimeout(() => {
+                                    dialogueIMG.src = "./img/RicardoTalk.png";
+                                    speech(this.speech.sobre_apt.speech_apt2, dialogueP);
+                                }, 5000);
+                                setTimeout(() => {
+                                    control = false;
+                                    dialogueBox.style.display = "none";
+                                    dialogueP.innerHTML = "";
+                                    sell = false;
+                                    fourthScene();
+                                }, 14000);
                             });
                         }, this.speech.sobre_apt.speech_time);
-                    } else {
-                        control = true;
-                        dialogueBox.style.display = "none";
-                        dialogueP.innerHTML = "";
+                    }
+                }
+            }
+
+            if (isFifthScene) {
+                if (this.position.x + this.width >= npcs[0].position.x && this.position.x <= npcs[0].position.x + npcs[0].width) {
+                    if (daniel == true) {
+                        isInteract = true;
+                        control = false;
+                        daniel = false;
+                        this.currentSprite = this.sprites.idle.right;
+                        keys.left.pressed = false;
+                        keys.right.pressed = false;
+                        dialogueIMG.src = "./img/DanielTalk.png";
                     }
                 }
             }
@@ -724,6 +769,8 @@ function callGame() {
         firstScene();
         // secondScene();
         // thirdScene();
+        // fourthScene();
+        // fifthScene();
     }
 
     function update() {
@@ -761,7 +808,7 @@ function callGame() {
     function firstScene() {
         daniel = true;
         banco = true;
-        isFirtScene = true;
+        isFirtsScene = true;
         scrollOffset = 0;
 
         platformRoad = createSprite(spritePlatformRoad);
@@ -779,7 +826,7 @@ function callGame() {
         $sounds[0].pause();
         $sounds[1].pause();
         $sounds[2].play();
-        isFirtScene = false;
+        isFirtsScene = false;
         isSecScene = true;
         isGame = false;
         player = null;
@@ -800,7 +847,6 @@ function callGame() {
     }
 
     function thirdScene() {
-        // vaga1 = true;
         scrollOffset = 0;
         isGame = true;
         isSecScene = false;
@@ -847,10 +893,55 @@ function callGame() {
             dialogueP.innerHTML = "";
             sell = true;
         }, 12000);
-        // control = true;
-        // dialogueBox.style.display = "none";
-        // dialogueP.innerHTML = "";
-        // sell = true;
+    }
+
+    function fourthScene() {
+        $sounds[0].pause();
+        $sounds[1].pause();
+        $sounds[2].pause();
+        $sounds[7].play();
+        isFirtsScene = false;
+        isSecScene = false;
+        isThirdScene = false;
+        isFourthScene = true;
+        isGame = false;
+        player = null;
+        control = false;
+        dialogueBox.style.display = "none";
+        dialogueP.innerHTML = "";
+        platform = null;
+        npcs = null;
+        genericObjects = null;
+        scrollOffset = 0;
+        $textScene.style.display = "block";
+        typeWritter(textForScene.scene_4, $textScene.querySelector("p"));
+
+        setTimeout(() => {
+            fifthScene();
+        }, 18000);
+    }
+
+    function fifthScene() {
+        daniel = true;
+        isFirtsScene = false;
+        isSecScene = false;
+        isThirdScene = false;
+        isFourthScene = false;
+        isFifthScene = true;
+        scrollOffset = 0;
+        isGame = true;
+        control = true;
+        $textScene.style.display = "none";
+        $painel.style.display = "block";
+        platformRoad = createSprite(spritePlatformRoad);
+
+        player = new Player(0, 280);
+
+        platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 2 + 3500, -458, createSprite(bank))];
+
+        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5), new NPC(platformRoad.width * 2 + 3832, 52, 256, 252, door, door, 256, 232, 0)];
+
+        genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
     }
 
     // -----------------------------------------------------------------------------------------------

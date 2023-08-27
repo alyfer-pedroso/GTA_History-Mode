@@ -53,7 +53,8 @@ const vagas = $decision_opt[0].querySelectorAll(".btns");
 const contas = $decision_opt[1].querySelectorAll(".btns");
 const $playerPlaying = document.querySelector(".playing");
 const $painel = document.querySelector(".painel");
-const $money = $painel.querySelector("b");
+const apts = $decision_opt[2].querySelectorAll(".btns");
+let $money = $painel.querySelector("b");
 let vaga1 = false;
 let vaga2 = false;
 let contaCo = false;
@@ -94,10 +95,18 @@ const textForScene = {
 const npc1_speech = {
     speech_1: "Ricardo, boa tarde. Como eu te disse no telefone, você foi escolhido para entrar na empresa, mas precisa fazer uma decisão.",
     speech_2: "É o seguinte: temos duas vagas aqui na empresa, VAGA A: salário é maior, mas com menos benefícios. VAGA B: salário menor, mas com mais benefícios.",
-    speech_3: "Na VAGA A  • Salário de R$ 3.250  • Vale-refeição  • Vale-transporte  • 10 horas de trabalho",
-    speech_4: "Na VAGA B  • Salário de R$ 2.000  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
+    speech_3: "Na VAGA A  • Salário de R$ 3.650  • Vale-refeição  • Vale-transporte  • 10 horas de trabalho",
+    speech_4: "Na VAGA B  • Salário de R$ 2.600  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
     speech_5: "Eae, qual você prefere?",
     speech_6: "Sábia decisão, Ricardo.",
+};
+
+const npc2_speech = {
+    speech_1: "Boa tarde! Sou eu sim, sou a Julia.",
+    speech_2: "O que achou desses imóveis?",
+    speech_3: "Claro. O Apartamento da esquerda é mais compacto. Possui  • Aluguel mensal: R$ 1.200  • Depósito de segurança: R$ 1.200  • Despesas de utilidades: R$ 150.",
+    speech_4: "O Apartamento da direita já é mais espaçoso. Possui  • Aluguel mensal: R$ 1.800  • Depósito de segurança: R$ 1.500  • Despesas de utilidades: R$ 200.",
+    speech_5: "De quanto é sua renda mensal?",
 };
 
 //-----------------------------------------------------------------------------------------------
@@ -174,7 +183,14 @@ function callGame() {
                 },
                 sobre_apt: {
                     speech_1: "Agora preciso achar um apartamento adequado para min, mas que caiba no meu orçamento.",
-                    speech_2: `Atualmente eu possuo ${$money.innerHTML}`,
+                    speech_2: "",
+                    speech_3: "Oi, boa tarde. Você deve ser a proprietaria desses imóveis né? Sou o Ricardo, conversamos por telefone.",
+                    speech_4: "Gostei muito dos dois, eles estão em ótimo estado! Poderia me passar novamente os detalhes, por favor?",
+                    speech_5: "",
+                    speech_6: "",
+                    speech_cant: "Vish, vou ter que ficar com o menor, já que economizará no aluguel mensal e no depósito de segurança, além de gastar menos em despesas de utilidades. Só que o espaço é mais limitado né.",
+                    speech_can: "Pela minha renda eu consigo alugar qualquer um dos dois. Hum... Qual eu pego?",
+                    speech_time: null,
                 },
             };
         }
@@ -353,7 +369,7 @@ function callGame() {
 
                             vagas[0].addEventListener("click", () => {
                                 vaga1 = true;
-                                $money.innerHTML = "R$ 3.250";
+                                $money.innerHTML = "R$ 3.650";
                                 $decision.style.display = "none";
                                 $decision_opt.forEach((opts) => {
                                     opts.style.display = "none";
@@ -380,7 +396,7 @@ function callGame() {
                             });
                             vagas[1].addEventListener("click", () => {
                                 vaga2 = true;
-                                $money.innerHTML = "R$ 2.000";
+                                $money.innerHTML = "R$ 2.600";
                                 $decision.style.display = "none";
                                 $decision_opt.forEach((opts) => {
                                     opts.style.display = "none";
@@ -539,7 +555,66 @@ function callGame() {
                         this.currentSprite = this.sprites.idle.right;
                         keys.left.pressed = false;
                         keys.right.pressed = false;
-                        dialogueIMG.src = "./img/DanielTalk.png";
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.sobre_apt.speech_3, dialogueP);
+                        }, 1000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/SellerTalk.png";
+                            speech(npc2_speech.speech_1, dialogueP);
+                        }, 10000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/SellerTalk.png";
+                            speech(npc2_speech.speech_2, dialogueP);
+                        }, 13000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.sobre_apt.speech_4, dialogueP);
+                        }, 16000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/SellerTalk.png";
+                            speech(npc2_speech.speech_3, dialogueP);
+                        }, 23000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/SellerTalk.png";
+                            speech(npc2_speech.speech_4, dialogueP);
+                        }, 33000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/SellerTalk.png";
+                            speech(npc2_speech.speech_5, dialogueP);
+                        }, 43000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.sobre_apt.speech_5, dialogueP);
+                        }, 46000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(this.speech.sobre_apt.speech_6, dialogueP);
+                        }, 50000);
+                        setTimeout(() => {
+                            $decision.style.display = "flex";
+                            $decision_opt[2].style.display = "block";
+
+                            apts[0].addEventListener("click", () => {
+                                if ($money.textContent == "R$ 2.600") {
+                                    $money.innerHTML = "R$ 50";
+                                } else if ($money.textContent == "R$ 3.650") {
+                                    $money.innerHTML = "R$ 1.100";
+                                }
+                                $sounds[6].play();
+                                $money.style.color = "orange";
+                                $decision.style.display = "none";
+                                $decision_opt[2].style.display = "none";
+                            });
+
+                            apts[1].addEventListener("click", () => {
+                                $sounds[6].play();
+                                $money.innerHTML = "R$ 150";
+                                $money.style.color = "orange";
+                                $decision.style.display = "none";
+                                $decision_opt[2].style.display = "none";
+                            });
+                        }, this.speech.sobre_apt.speech_time);
                     } else {
                         control = true;
                         dialogueBox.style.display = "none";
@@ -725,6 +800,7 @@ function callGame() {
     }
 
     function thirdScene() {
+        // vaga1 = true;
         scrollOffset = 0;
         isGame = true;
         isSecScene = false;
@@ -740,9 +816,18 @@ function callGame() {
         player = new Player(0, 280);
 
         if (vaga1) {
-            $money.innerHTML = "R$ 3.250";
+            $money.innerHTML = "R$ 3.650";
+            player.speech.sobre_apt.speech_2 = `Atualmente eu possuo ${$money.textContent}`;
+            player.speech.sobre_apt.speech_5 = `Minha renda mensal é de ${$money.textContent}`;
+            player.speech.sobre_apt.speech_6 = `Pela minha renda eu consigo alugar qualquer um dos dois. Hum... Qual eu pego?`;
+            player.speech.sobre_apt.speech_time = 55000;
         } else if (vaga2) {
-            $money.innerHTML = "R$ 2.000";
+            $money.innerHTML = "R$ 2.600";
+            player.speech.sobre_apt.speech_2 = `Atualmente eu possuo ${$money.textContent}`;
+            player.speech.sobre_apt.speech_5 = `Minha renda mensal é de ${$money.textContent}`;
+            player.speech.sobre_apt.speech_6 = `Vish, vou ter que ficar com o menor, já que economizará no aluguel mensal e no depósito de segurança, além de gastar menos em despesas de utilidades. Só que o espaço é mais limitado né.`;
+            player.speech.sobre_apt.speech_time = 61000;
+            apts[1].style.display = "none";
         }
 
         control = false;
@@ -762,6 +847,10 @@ function callGame() {
             dialogueP.innerHTML = "";
             sell = true;
         }, 12000);
+        // control = true;
+        // dialogueBox.style.display = "none";
+        // dialogueP.innerHTML = "";
+        // sell = true;
     }
 
     // -----------------------------------------------------------------------------------------------

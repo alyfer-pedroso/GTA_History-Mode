@@ -56,6 +56,8 @@ const contas = $decision_opt[1].querySelectorAll(".btns");
 const $playerPlaying = document.querySelector(".playing");
 const $painel = document.querySelector(".painel");
 const apts = $decision_opt[2].querySelectorAll(".btns");
+const bankbtns = $decision_opt[3].querySelectorAll(".btns");
+const bankSaldo = $decision_opt[3].querySelector(".bank-main_saldo");
 let $money = $painel.querySelector("b");
 let vaga1 = false;
 let vaga2 = false;
@@ -102,6 +104,13 @@ const npc1_speech = {
     speech_4: "Na VAGA B  • Salário de R$ 2.600  • Vale-refeição  • Vale-transporte  • Plano de saúde  • 8 horas de trabalho",
     speech_5: "Eae, qual você prefere?",
     speech_6: "Sábia decisão, Ricardo.",
+    speech_7: "Oi, Ricardo. O que faz aqui? Seu expediente de hoje ja acabou.",
+    speech_8: "Olha, você poderia investir em ações.",
+    speech_9: "Investir em ações envolve comprar uma parte de uma empresa e, potencialmente, lucrar com o crescimento do valor dessa empresa ao longo do tempo.",
+    speech_10: "O processo envolve aprender sobre investimentos, escolher uma corretora confiável, pesquisar empresas, abrir uma conta, depositar dinheiro, comprar ações através da plataforma da corretora e monitorar seu desempenho.",
+    speech_11: "Tomar decisões informadas com base na análise, diversificar para reduzir riscos e manter-se atualizado são partes essenciais do processo. Lembre-se de que investir em ações tem riscos e requer uma abordagem cuidadosa e educada.",
+    speech_12: "Você pode fazer isso através de um banco. Muitos bancos também estão oferecendo serviços de investimento em ações e, integrados também às suas plataformas de aplicativos.",
+    speech_13: "Abra o app do banco Santo André aí no seu smartphone.",
 };
 
 const npc2_speech = {
@@ -172,6 +181,10 @@ function callGame() {
                     speech_3: "Bom, eu ja vou indo. Preciso passar no banco aqui da esquina para criar a minha conta. Até amanhã!",
                     speech_vaga1: "Um salário maior é a melhor opção para meu início de carreira. Eu escolho a oferta com o salário mais alto e menos benefícios.",
                     speech_vaga2: "Eu opto pela oferta que oferece um salário menor, mas com benefícios mais abrangentes. Estou ansioso para equilibrar minha vida pessoal e profissional de maneira mais saudável.",
+                    speech_4: "Oi, Dan. Estou aqui por outra coisa.",
+                    speech_5: "Você poderia me dar um conselho financeiro? Estou meio duro na carteira e preciso de ajuda sobre o que eu poderia fazer a mais além desse trabalho.",
+                    speech_6: "Insvestir em ações?",
+                    speech_7: "UAU! Mas por onde eu posso fazer isso?",
                 },
                 banco: {
                     speech_1: "Cheguei! Aqui é o banco Santo André.",
@@ -186,7 +199,7 @@ function callGame() {
                     contaPo_2: "Embora as taxas de juros sejam geralmente baixas, a conta poupança proporciona uma alternativa segura para manter dinheiro em casa, com a vantagem adicional de serviços bancários, planejamento financeiro e proteção contra inflação.",
                 },
                 sobre_apt: {
-                    speech_1: "Agora preciso achar um apartamento adequado para min, mas que caiba no meu orçamento.",
+                    speech_1: "Agora preciso achar um apartamento adequado para mim, mas que caiba no meu orçamento.",
                     speech_2: "",
                     speech_3: "Oi, boa tarde. Você deve ser a proprietaria desses imóveis né? Sou o Ricardo, conversamos por telefone.",
                     speech_4: "Gostei muito dos dois, eles estão em ótimo estado! Poderia me passar novamente os detalhes, por favor?",
@@ -624,6 +637,7 @@ function callGame() {
                                     dialogueBox.style.display = "none";
                                     dialogueP.innerHTML = "";
                                     sell = false;
+                                    isInteract = false;
                                     fourthScene();
                                 }, 15000);
                             });
@@ -646,6 +660,7 @@ function callGame() {
                                     dialogueBox.style.display = "none";
                                     dialogueP.innerHTML = "";
                                     sell = false;
+                                    isInteract = false;
                                     fourthScene();
                                 }, 14000);
                             });
@@ -659,11 +674,70 @@ function callGame() {
                     if (daniel == true) {
                         isInteract = true;
                         control = false;
-                        daniel = false;
+
                         this.currentSprite = this.sprites.idle.right;
                         keys.left.pressed = false;
                         keys.right.pressed = false;
-                        dialogueIMG.src = "./img/DanielTalk.png";
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_7, dialogueP);
+                        }, 1000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(player.speech.daniel.speech_4, dialogueP);
+                        }, 7000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(player.speech.daniel.speech_5, dialogueP);
+                        }, 10000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_8, dialogueP);
+                        }, 20000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(player.speech.daniel.speech_6, dialogueP);
+                        }, 24000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_9, dialogueP);
+                        }, 27000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_10, dialogueP);
+                        }, 37000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_11, dialogueP);
+                        }, 51000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/RicardoTalk.png";
+                            speech(player.speech.daniel.speech_7, dialogueP);
+                        }, 68000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_12, dialogueP);
+                        }, 73000);
+                        setTimeout(() => {
+                            dialogueIMG.src = "./img/DanielTalk.png";
+                            speech(npc1_speech.speech_13, dialogueP);
+                        }, 83000);
+                        setTimeout(() => {
+                            $decision.style.display = "flex";
+                            $decision_opt[3].style.display = "block";
+                            setTimeout(() => {
+                                $decision_opt[3].style.opacity = 1;
+                                dialogueBox.style.display = "none";
+                                dialogueP.innerHTML = "";
+                                bankbtns[0].style.display = "block";
+                                bankbtns[0].addEventListener("click", (e) => {
+                                    e.target.removeEventListener;
+                                    e.target.style.display = "none";
+                                    bankSaldo.style.display = "flex";
+                                    bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                });
+                            }, 100);
+                        }, 88000);
                     }
                 }
             }
@@ -940,7 +1014,7 @@ function callGame() {
 
         platforms = [new Platform(-1, 374, platformRoad), new Platform(platformRoad.width - 2, 374, platformRoad), new Platform(platformRoad.width * 2 - 2, 374, platformRoad), new Platform(platformRoad.width * 3 - 2, 374, platformRoad), new Platform(platformRoad.width * 4 - 2, 374, platformRoad), new Platform(platformRoad.width * 5 - 2, 374, platformRoad), new Platform(platformRoad.width * 6 - 2, 374, platformRoad), new Platform(platformRoad.width * 7 - 2, 374, platformRoad), new Platform(platformRoad.width * 8 - 2, 374, platformRoad), new Platform(platformRoad.width * 9 - 2, 374, platformRoad), new Platform(platformRoad.width * 10 - 2, 374, platformRoad), new Platform(platformRoad.width * 2 + 50, -490, createSprite(spriteCondos)), new Platform(platformRoad.width * 2 + 3500, -458, createSprite(bank))];
 
-        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5), new NPC(platformRoad.width * 2 + 3832, 52, 256, 252, door, door, 256, 232, 0)];
+        npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
 
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
     }
@@ -1012,11 +1086,13 @@ function callGame() {
     start();
     window.setInterval(loop, 1000 / 60);
     if (isGame) {
-        playerFrames = setInterval(() => {
-            player.animate();
-            npcs.forEach((npc) => {
-                npc.animate();
-            });
-        }, 60);
+        if (player != null) {
+            playerFrames = setInterval(() => {
+                player.animate();
+                npcs.forEach((npc) => {
+                    npc.animate();
+                });
+            }, 60);
+        }
     }
 }

@@ -909,6 +909,7 @@ function callGame() {
         control = false;
         dialogueBox.style.display = "none";
         dialogueP.innerHTML = "";
+        $painel.style.display = "none";
         platform = null;
         npcs = null;
         genericObjects = null;

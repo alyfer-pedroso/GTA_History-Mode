@@ -216,7 +216,8 @@ body {
     background-color: black;
     color: white;
 }
-.bank-main_saldo {
+.bank-main_saldo,
+.bank-main_acoes {
     position: relative;
     background-color: #e4e4e4;
     width: 100%;
@@ -227,30 +228,85 @@ body {
     flex-direction: column;
     gap: 2rem;
 }
-.bank-main_saldo h2 {
+.bank-main_acoes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: scroll;
+}
+.bank-main_saldo h2,
+.bank-main_acoes h2,
+.bank-main_acoes h3 {
     text-align: center;
     font-family: pixelBold;
     font-size: 1.5rem;
     /* font-weight: bold; */
     color: #980303;
 }
-.bank-main_saldo p {
+.bank-main_acoes h3 {
+    text-align: left;
+}
+.bank-main_saldo p,
+.bank-main_acoes p {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     background-color: white;
     padding: 1rem;
 }
-.bank-main_saldo p b {
+.bank-main_saldo p b,
+.bank-main_acoes p b {
     font-weight: bold;
     font-size: 1.3rem;
 }
-.bank-main_saldo .btns {
+.bank-main_saldo .btns,
+.bank-main_acoes .btns {
     background-color: #980303;
     font-size: 1rem;
     width: 50%;
     align-self: center;
     margin-top: 2rem;
+}
+.bank-main_acoes-acoes {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1rem; */
+    background-color: white;
+    padding: 1rem;
+    justify-content: center;
+}
+.bank-main_acoes-acoes:hover {
+    background-color: #ccc;
+    cursor: pointer;
+    outline: 2px dotted black;
+    outline-offset: -2px;
+}
+.bank-main_acoes-acoes span {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.bank-main_acoes-acoes p {
+    display: flex;
+    flex-direction: row;
+    padding: 1rem 0 0;
+    background-color: inherit;
+}
+.bank-main_acoes-acoes b,
+.bank-main_acoes-acoes p b {
+    font-weight: bold;
+    font-size: 1rem;
+}
+.bank-main_acoes-acoes p b + strong {
+    color: green;
+    font-weight: bold;
+}
+.bank-main_acoes-acoes p b + .low {
+    color: red;
+    font-weight: bold;
+}
+.bank-main_acoes img {
+    width: 25px;
 }
 
 .btns {

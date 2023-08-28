@@ -43,6 +43,7 @@ let isSecScene = false;
 let isThirdScene = false;
 let isFourthScene = false;
 let isFifthScene = false;
+let isSixthScene = false;
 
 // GAME HTML PROPERTIES
 const $menu = document.querySelector(".menu");
@@ -58,12 +59,15 @@ const $painel = document.querySelector(".painel");
 const apts = $decision_opt[2].querySelectorAll(".btns");
 const bankbtns = $decision_opt[3].querySelectorAll(".btns");
 const bankSaldo = $decision_opt[3].querySelector(".bank-main_saldo");
+const bankInvestir = $decision_opt[3].querySelector(".bank-main_acoes");
+const bankAcoes = document.querySelectorAll(".bank-main_acoes-acoes");
 let $money = $painel.querySelector("b");
 let vaga1 = false;
 let vaga2 = false;
 let contaCo = false;
 let contaSa = false;
 let contaPo = false;
+let dpsInvestir = false;
 
 $painel.style.display = "none";
 $decision.style.display = "none";
@@ -95,6 +99,7 @@ const textForScene = {
     epilogue: "Você vai assumir o papel de um jovem adulto chamado Ricardo, que está prestes a enfrentar os desafios do mundo financeiro após sair da faculdade. O objetivo é ajudar Ricardo a tomar decisões sábias e informadas sobre assuntos relacionados à educação financeira, desde a abertura da primeira conta bancária até o investimento em ações e planejamento para o futuro.",
     scene_2: "Um mês se passou e Ricardo recebeu seu primeiro salário. Ele está muito feliz...",
     scene_4: "Ricardo percebeu que se manter só no salário do seu trabalho atual não é o suficiente para se manter na vida. Agora ele está em busca de um conselho para iniciar corretamente sua vida financeira e para isso ele vai atrá de um amigo.",
+    scene_5: "",
 };
 
 const npc1_speech = {
@@ -111,6 +116,8 @@ const npc1_speech = {
     speech_11: "Tomar decisões informadas com base na análise, diversificar para reduzir riscos e manter-se atualizado são partes essenciais do processo. Lembre-se de que investir em ações tem riscos e requer uma abordagem cuidadosa e educada.",
     speech_12: "Você pode fazer isso através de um banco. Muitos bancos também estão oferecendo serviços de investimento em ações e, integrados também às suas plataformas de aplicativos.",
     speech_13: "Abra o app do banco Santo André aí no seu smartphone.",
+    speech_14: "Você acabou de comprar uma ação. Logo se torna um acionista da empresa da qual comprou a ação. Isso significa que você é proprietário de uma parte muito pequena dessa empresa.",
+    speech_15: "Como acionista, você terá o direito de acompanhar o desempenho da empresa e tomar decisões relacionadas às suas ações. Isso pode incluir manter as ações a longo prazo, vendê-las em algum momento ou participar de assembleias de acionistas.",
 };
 
 const npc2_speech = {
@@ -185,6 +192,8 @@ function callGame() {
                     speech_5: "Você poderia me dar um conselho financeiro? Estou meio duro na carteira e preciso de ajuda sobre o que eu poderia fazer a mais além desse trabalho.",
                     speech_6: "Insvestir em ações?",
                     speech_7: "UAU! Mas por onde eu posso fazer isso?",
+                    speech_8: "CARAMBA! Isso é fantástico, mas o mercado de ações pode ser volátil e envolve riscos. Preciso ter cuidado...",
+                    speech_9: "Muito obrigado! Até mais, Dan.",
                 },
                 banco: {
                     speech_1: "Cheguei! Aqui é o banco Santo André.",
@@ -735,6 +744,162 @@ function callGame() {
                                     e.target.style.display = "none";
                                     bankSaldo.style.display = "flex";
                                     bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                    $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                    bankbtns[1].addEventListener("click", (e) => {
+                                        e.target.style.display = "none";
+                                        bankSaldo.style.display = "none";
+                                        bankInvestir.style.display = "flex";
+
+                                        bankAcoes[0].addEventListener("click", (e) => {
+                                            e.target.removeEventListener;
+                                            if ($money.innerHTML == "R$ 50") {
+                                                $money.innerHTML = "R$ 47,07";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else if ($money.innerHTML == "R$ 150") {
+                                                $money.innerHTML = "R$ 147,07";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else {
+                                                $money.innerHTML = "R$ 1.097,07";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            }
+                                            $decision_opt[3].style.opacity = 0;
+                                            setTimeout(() => {
+                                                $decision_opt[3].style.display = "none";
+                                                $decision.style.display = "none";
+
+                                                setTimeout(() => {
+                                                    dialogueIMG.src = "./img/DanielTalk.png";
+                                                    speech(npc1_speech.speech_14, dialogueP);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/DanielTalk.png";
+                                                        speech(npc1_speech.speech_15, dialogueP);
+                                                    }, 10000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_8, dialogueP);
+                                                    }, 25000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_9, dialogueP);
+                                                    }, 33000);
+                                                    setTimeout(() => {
+                                                        control = false;
+                                                        dialogueBox.style.display = "none";
+                                                        dialogueP.innerHTML = "";
+                                                        sell = false;
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final médio, pois investiu e cuidou do seu dinheiro mais ou menos.";
+                                                        sixthScene();
+                                                    }, 38000);
+                                                }, 2000);
+                                            }, 2100);
+                                        });
+
+                                        bankAcoes[1].addEventListener("click", (e) => {
+                                            e.target.removeEventListener;
+                                            if ($money.innerHTML == "R$ 50") {
+                                                $money.innerHTML = "R$ 34,69";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else if ($money.innerHTML == "R$ 150") {
+                                                $money.innerHTML = "R$ 134,69";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else {
+                                                $money.innerHTML = "R$ 1.084,69";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            }
+                                            $decision_opt[3].style.opacity = 0;
+                                            setTimeout(() => {
+                                                $decision_opt[3].style.display = "none";
+                                                $decision.style.display = "none";
+
+                                                setTimeout(() => {
+                                                    dialogueIMG.src = "./img/DanielTalk.png";
+                                                    speech(npc1_speech.speech_14, dialogueP);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/DanielTalk.png";
+                                                        speech(npc1_speech.speech_15, dialogueP);
+                                                    }, 10000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_8, dialogueP);
+                                                    }, 25000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_9, dialogueP);
+                                                    }, 33000);
+                                                    setTimeout(() => {
+                                                        control = false;
+                                                        dialogueBox.style.display = "none";
+                                                        dialogueP.innerHTML = "";
+                                                        sell = false;
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final bom, pois investiu e cuidou do seu dinheiro corretamente.";
+                                                        sixthScene();
+                                                    }, 38000);
+                                                }, 2000);
+                                            }, 2100);
+                                        });
+
+                                        bankAcoes[2].addEventListener("click", (e) => {
+                                            e.target.removeEventListener;
+                                            if ($money.innerHTML == "R$ 50") {
+                                                $money.innerHTML = "R$ 45,46";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else if ($money.innerHTML == "R$ 150") {
+                                                $money.innerHTML = "R$ 145,46";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            } else {
+                                                $money.innerHTML = "R$ 1.095,46";
+                                                $sounds[6].play();
+                                                bankSaldo.querySelector("p b").innerHTML = $money.innerHTML;
+                                                $decision_opt[3].querySelector(".bank-main_acoes p b").innerHTML = $money.innerHTML;
+                                            }
+                                            $decision_opt[3].style.opacity = 0;
+                                            setTimeout(() => {
+                                                $decision_opt[3].style.display = "none";
+                                                $decision.style.display = "none";
+
+                                                setTimeout(() => {
+                                                    dialogueIMG.src = "./img/DanielTalk.png";
+                                                    speech(npc1_speech.speech_14, dialogueP);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/DanielTalk.png";
+                                                        speech(npc1_speech.speech_15, dialogueP);
+                                                    }, 10000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_8, dialogueP);
+                                                    }, 25000);
+                                                    setTimeout(() => {
+                                                        dialogueIMG.src = "./img/RicardoTalk.png";
+                                                        speech(player.speech.daniel.speech_9, dialogueP);
+                                                    }, 33000);
+                                                    setTimeout(() => {
+                                                        control = false;
+                                                        dialogueBox.style.display = "none";
+                                                        dialogueP.innerHTML = "";
+                                                        sell = false;
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final ruim, pois não investiu e cuidou do seu dinheiro de maneira correta.";
+                                                        sixthScene();
+                                                    }, 38000);
+                                                }, 2000);
+                                            }, 2100);
+                                        });
+                                    });
                                 });
                             }, 100);
                         }, 88000);
@@ -1017,6 +1182,30 @@ function callGame() {
         npcs = [new NPC(platformRoad.width * 2 + 250, 245, 120, 164, maverickIdleRight, maverickIdleRight, 240, 328, 5)];
 
         genericObjects = [new GenericObject(-1, -200, createSprite(spriteBackground)), new GenericObject(-1, -210, createSprite(spriteBuildings))];
+    }
+
+    function sixthScene() {
+        isFirtsScene = false;
+        isSecScene = false;
+        isThirdScene = false;
+        isFourthScene = true;
+        isFourthScene = false;
+        isSixthScene = true;
+        isGame = false;
+        player = null;
+        control = false;
+        dialogueBox.style.display = "none";
+        dialogueP.innerHTML = "";
+        $painel.style.display = "none";
+        platform = null;
+        npcs = null;
+        genericObjects = null;
+        scrollOffset = 0;
+        $textScene.style.display = "block";
+        typeWritter(textForScene.scene_5, $textScene.querySelector("p"));
+        setTimeout(() => {
+            location.reload();
+        }, 18000);
     }
 
     // -----------------------------------------------------------------------------------------------

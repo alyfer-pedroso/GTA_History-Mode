@@ -793,7 +793,7 @@ function callGame() {
                                                         dialogueBox.style.display = "none";
                                                         dialogueP.innerHTML = "";
                                                         sell = false;
-                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final médio, pois investiu e cuidou do seu dinheiro mais ou menos.";
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo financeiro. De acordo com suas escolhas, esse foi o final médio, pois investiu e cuidou do seu dinheiro mais ou menos.";
                                                         sixthScene();
                                                     }, 38000);
                                                 }, 2000);
@@ -843,7 +843,7 @@ function callGame() {
                                                         dialogueBox.style.display = "none";
                                                         dialogueP.innerHTML = "";
                                                         sell = false;
-                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final bom, pois investiu e cuidou do seu dinheiro corretamente.";
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo financeiro. De acordo com suas escolhas, esse foi o final bom, pois investiu e cuidou do seu dinheiro corretamente.";
                                                         sixthScene();
                                                     }, 38000);
                                                 }, 2000);
@@ -893,7 +893,7 @@ function callGame() {
                                                         dialogueBox.style.display = "none";
                                                         dialogueP.innerHTML = "";
                                                         sell = false;
-                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo finceiro. De acordo com suas escolhas, esse foi o final ruim, pois não investiu e cuidou do seu dinheiro de maneira correta.";
+                                                        textForScene.scene_5 = "Parabéns, você acabou de dar os passos inicias após entrar no mundo financeiro. De acordo com suas escolhas, esse foi o final ruim, pois não investiu e cuidou do seu dinheiro de maneira correta.";
                                                         sixthScene();
                                                     }, 38000);
                                                 }, 2000);
